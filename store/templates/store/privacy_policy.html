@@ -1,0 +1,383 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Privacy Policy | HOODLAB{% endblock %}
+
+{% block content %}
+
+<style>
+:root {
+  --bg: #f4f5f7;
+  --green: #16a34a; --green-bg: #f0fdf4;
+}
+body { background: var(--bg); }
+
+.co-wrapper {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+.co-heading {
+  font-family: var(--font-display);
+  font-size: 28px; font-weight: 800;
+  letter-spacing: -.5px; color: var(--ink);
+  margin-bottom: 6px;
+}
+.co-subheading {
+  font-size: 13.5px; color: var(--muted);
+  margin-bottom: 28px;
+}
+
+/* GRID */
+.co-grid {
+  display: grid;
+  grid-template-columns: 1fr 260px;
+  gap: 24px;
+  align-items: start;
+}
+
+/* SECTION CARD */
+.co-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.co-card:last-child { margin-bottom: 0; }
+
+.co-card-head {
+  display: flex; align-items: center; gap: 10px;
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--border);
+}
+.co-card-num {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--ink); color: #fff;
+  font-family: var(--font-display); font-size: 12px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.co-card-title {
+  font-family: var(--font-display); font-size: 15px; font-weight: 700;
+}
+.co-card-body {
+  padding: 22px 24px;
+}
+
+/* POLICY TEXT */
+.policy-text {
+  font-size: 14px; color: var(--ink-soft);
+  line-height: 1.8; margin: 0;
+}
+.policy-text strong { color: var(--ink); font-weight: 700; }
+
+/* LIST ITEMS — same feel as addr-text */
+.policy-list {
+  margin: 12px 0 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.policy-list li {
+  display: flex; align-items: flex-start; gap: 10px;
+  font-size: 14px; color: var(--ink-soft); line-height: 1.6;
+}
+.policy-list li::before {
+  content: "";
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--muted); flex-shrink: 0; margin-top: 7px;
+}
+
+/* HIGHLIGHT BOX — like addr-default-tag but block */
+.policy-highlight {
+  display: flex; align-items: flex-start; gap: 12px;
+  background: var(--green-bg); border: 1px solid rgba(22,163,74,.2);
+  border-radius: 10px; padding: 14px 16px; margin-top: 14px;
+}
+.policy-highlight svg { width: 16px; height: 16px; stroke: var(--green); fill: none; stroke-width: 2.5; flex-shrink: 0; margin-top: 1px; }
+.policy-highlight p { font-size: 13.5px; color: var(--green); font-weight: 600; margin: 0; line-height: 1.6; }
+
+/* SUMMARY PANEL — exact .co-summary */
+.co-summary {
+  background: #fff; border: 1px solid var(--border);
+  border-radius: 16px; overflow: hidden;
+  position: sticky; top: 84px;
+}
+.co-summary-head {
+  padding: 18px 22px; border-bottom: 1px solid var(--border);
+}
+.co-summary-title { font-family: var(--font-display); font-size: 15px; font-weight: 700; }
+
+/* TOC nav links */
+.toc-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 20px; border-bottom: 1px solid var(--border);
+  text-decoration: none; font-size: 13.5px;
+  color: var(--ink-soft); transition: background .15s;
+  cursor: pointer;
+}
+.toc-item:last-of-type { border-bottom: none; }
+.toc-item:hover { background: var(--surface); color: var(--ink); }
+.toc-item.active { background: var(--surface); color: var(--ink); font-weight: 600; }
+
+.toc-num {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--surface); border: 1px solid var(--border);
+  font-family: var(--font-display); font-size: 10px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; color: var(--muted);
+  transition: all .15s;
+}
+.toc-item:hover .toc-num,
+.toc-item.active .toc-num {
+  background: var(--ink); border-color: var(--ink); color: #fff;
+}
+
+/* Contact row at bottom of sidebar */
+.co-item {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 20px; border-top: 1px solid var(--border);
+  text-decoration: none; transition: background .15s;
+}
+.co-item:hover { background: var(--surface); }
+.co-item-icon {
+  width: 36px; height: 36px; border-radius: 9px;
+  background: var(--surface); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.co-item-icon svg { width: 15px; height: 15px; stroke: var(--muted); fill: none; stroke-width: 1.75; }
+.co-item-label { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 2px; }
+.co-item-val   { font-size: 13px; font-weight: 600; color: var(--ink); }
+
+/* TRUST STRIP — exact copy from checkout */
+.trust-strip {
+  display: flex;
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+}
+.trust-item {
+  flex: 1; display: flex; flex-direction: column; align-items: center;
+  gap: 5px; text-align: center; padding: 14px 8px;
+  border-right: 1px solid var(--border);
+}
+.trust-item:last-child { border-right: none; }
+.trust-item svg { width: 18px; height: 18px; stroke: var(--muted); fill: none; stroke-width: 1.75; }
+.trust-item span { font-size: 10px; color: var(--muted); line-height: 1.4; }
+
+/* RESPONSIVE */
+@media (max-width: 860px) {
+  .co-grid { grid-template-columns: 1fr; }
+  .co-summary { position: relative; top: 0; order: -1; }
+  /* show toc as horizontal scroll on mobile */
+  .toc-list { display: flex; overflow-x: auto; }
+  .toc-item { border-bottom: none; border-right: 1px solid var(--border); white-space: nowrap; flex-shrink: 0; }
+  .toc-item:last-of-type { border-right: none; }
+}
+@media (max-width: 480px) {
+  .co-wrapper { padding: 24px 16px 60px; }
+  .co-heading  { font-size: 24px; }
+  .co-card-body { padding: 16px 18px; }
+}
+</style>
+
+<div class="co-wrapper">
+
+  <h1 class="co-heading">Privacy Policy</h1>
+  <p class="co-subheading">Last updated: {{ now|date:"F Y" }}</p>
+
+  <div class="co-grid">
+
+    <!-- ─── LEFT: POLICY SECTIONS ─── -->
+    <div>
+
+      <!-- 1. Information We Collect -->
+      <div class="co-card" id="section-1">
+        <div class="co-card-head">
+          <div class="co-card-num">1</div>
+          <span class="co-card-title">Information We Collect</span>
+        </div>
+        <div class="co-card-body">
+          <p class="policy-text">When you place an order on HOODLAB, we collect the following information:</p>
+          <ul class="policy-list">
+            <li>Full Name</li>
+            <li>Email Address</li>
+            <li>Phone Number</li>
+            <li>Shipping Address</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 2. How We Use Your Information -->
+      <div class="co-card" id="section-2">
+        <div class="co-card-head">
+          <div class="co-card-num">2</div>
+          <span class="co-card-title">How We Use Your Information</span>
+        </div>
+        <div class="co-card-body">
+          <p class="policy-text">Your information is used to:</p>
+          <ul class="policy-list">
+            <li>Process and deliver your orders</li>
+            <li>Contact you regarding your purchase</li>
+            <li>Provide customer support</li>
+            <li>Verify payments manually</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 3. Cookies -->
+      <div class="co-card" id="section-3">
+        <div class="co-card-head">
+          <div class="co-card-num">3</div>
+          <span class="co-card-title">Cookies</span>
+        </div>
+        <div class="co-card-body">
+          <p class="policy-text">We use cookies to improve user experience, maintain login sessions, and store cart information. These cookies are essential for the site to function correctly and are not used for advertising purposes.</p>
+        </div>
+      </div>
+
+      <!-- 4. Data Sharing -->
+      <div class="co-card" id="section-4">
+        <div class="co-card-head">
+          <div class="co-card-num">4</div>
+          <span class="co-card-title">Data Sharing</span>
+        </div>
+        <div class="co-card-body">
+          <p class="policy-text">We do not sell or share your personal information with third parties except when required to fulfill delivery of your order.</p>
+          <div class="policy-highlight">
+            <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <p>Your data is never sold or shared with advertisers. Ever.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Payment Information -->
+      <div class="co-card" id="section-5">
+        <div class="co-card-head">
+          <div class="co-card-num">5</div>
+          <span class="co-card-title">Payment Information</span>
+        </div>
+        <div class="co-card-body">
+          <p class="policy-text">Payments are verified manually. We do <strong>not</strong> store any card or banking details on our servers. All transactions are handled securely and your financial information never touches our database.</p>
+        </div>
+      </div>
+
+      <!-- 6. Account Deletion -->
+      <div class="co-card" id="section-6">
+        <div class="co-card-head">
+          <div class="co-card-num">6</div>
+          <span class="co-card-title">Account Deletion</span>
+        </div>
+        <div class="co-card-body">
+          <p class="policy-text">You will soon be able to delete your account directly from your account settings. If you wish to remove your data in the meantime, please contact us using the details below and we'll handle it promptly.</p>
+        </div>
+      </div>
+
+      <!-- 7. Contact Us -->
+      <div class="co-card" id="section-7">
+        <div class="co-card-head">
+          <div class="co-card-num">7</div>
+          <span class="co-card-title">Contact Us</span>
+        </div>
+        <div class="co-card-body">
+          <p class="policy-text">If you have any questions about this Privacy Policy, reach out to us:</p>
+          <ul class="policy-list" style="margin-top:14px">
+            <li>Email: <strong>hoodlabclothing@gmail.com</strong></li>
+            <li>Phone: <strong>+91 98765 43210</strong></li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ─── RIGHT: SIDEBAR ─── -->
+    <div class="co-summary">
+      <div class="co-summary-head">
+        <div class="co-summary-title">On this page</div>
+      </div>
+
+      <div class="toc-list">
+        <a class="toc-item active" onclick="scrollTo('section-1')">
+          <div class="toc-num">1</div>
+          Information We Collect
+        </a>
+        <a class="toc-item" onclick="scrollTo('section-2')">
+          <div class="toc-num">2</div>
+          How We Use It
+        </a>
+        <a class="toc-item" onclick="scrollTo('section-3')">
+          <div class="toc-num">3</div>
+          Cookies
+        </a>
+        <a class="toc-item" onclick="scrollTo('section-4')">
+          <div class="toc-num">4</div>
+          Data Sharing
+        </a>
+        <a class="toc-item" onclick="scrollTo('section-5')">
+          <div class="toc-num">5</div>
+          Payment Info
+        </a>
+        <a class="toc-item" onclick="scrollTo('section-6')">
+          <div class="toc-num">6</div>
+          Account Deletion
+        </a>
+        <a class="toc-item" onclick="scrollTo('section-7')">
+          <div class="toc-num">7</div>
+          Contact Us
+        </a>
+      </div>
+
+      <!-- CONTACT SHORTCUT -->
+      <a href="mailto:hoodlabclothing@gmail.com" class="co-item">
+        <div class="co-item-icon">
+          <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </div>
+        <div>
+          <div class="co-item-label">Questions?</div>
+          <div class="co-item-val">Email us directly</div>
+        </div>
+      </a>
+
+      <!-- TRUST STRIP -->
+      <div class="trust-strip">
+        <div class="trust-item">
+          <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <span>Data<br>Secure</span>
+        </div>
+        <div class="trust-item">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span>Never<br>Sold</span>
+        </div>
+        <div class="trust-item">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span>Always<br>Updated</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+/* smooth scroll to section */
+function scrollTo(id) {
+  document.getElementById(id).scrollIntoView({ behavior: "smooth", block: "start" });
+  document.querySelectorAll(".toc-item").forEach(el => el.classList.remove("active"));
+  event.currentTarget.classList.add("active");
+}
+
+/* highlight active section on scroll */
+const sections = document.querySelectorAll("[id^='section-']");
+const tocItems  = document.querySelectorAll(".toc-item");
+
+window.addEventListener("scroll", () => {
+  let current = "";
+  sections.forEach(s => {
+    if (window.scrollY >= s.offsetTop - 120) current = s.id;
+  });
+  tocItems.forEach((el, i) => {
+    el.classList.toggle("active", el.getAttribute("onclick")?.includes(current));
+  });
+});
+</script>
+
+{% endblock %}

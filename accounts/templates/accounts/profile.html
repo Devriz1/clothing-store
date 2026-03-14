@@ -1,0 +1,453 @@
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}My Profile | HOODLAB{% endblock %}
+
+{% block content %}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HOODLAB — My Profile</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --ink:#0c0c0e;--ink-soft:#3d3d44;--muted:#9ca3af;
+  --border:#e8e8ea;--surface:#f7f7f8;--surface-2:#f0f0f2;
+  --white:#ffffff;--bg:#f4f5f7;
+  --green:#16a34a;--green-bg:#f0fdf4;
+  --red:#ef4444;--red-bg:#fef2f2;--red-border:#fecaca;
+  --blue:#3b82f6;--blue-bg:#eff6ff;
+  --purple:#9333ea;--purple-bg:#faf5ff;
+  --font-body:"DM Sans",sans-serif;--font-display:"Syne",sans-serif;
+  --ease:cubic-bezier(0.22,1,0.36,1);
+}
+body{font-family:var(--font-body);background:var(--bg);color:var(--ink);min-height:100vh}
+/* HEADER */
+header{height:64px;background:rgba(255,255,255,0.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 40px;position:sticky;top:0;z-index:1000}
+.logo{font-family:var(--font-display);font-size:20px;font-weight:800;letter-spacing:3px;color:var(--ink);text-decoration:none}
+.header-icons{display:flex;gap:8px;align-items:center}
+.icon-btn{width:38px;height:38px;border-radius:10px;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;text-decoration:none;transition:all .18s;position:relative}
+.icon-btn:hover{background:var(--surface-2);border-color:#d0d0d4}
+.icon-btn img{width:20px;height:20px}
+/*.cart-count{position:absolute;top:-5px;right:-5px;background:var(--ink);color:#fff;font-family:var(--font-display);font-size:9px;font-weight:700;width:17px;height:17px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid var(--bg)}
+/* LAYOUT */
+.page-wrapper{max-width:1200px;margin:0 auto;padding:36px 24px 80px;display:grid;grid-template-columns:240px 1fr;gap:24px;align-items:start}
+/* SIDEBAR */
+.sidebar{position:sticky;top:84px;display:flex;flex-direction:column;gap:8px}
+.user-card{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:18px;display:flex;align-items:center;gap:12px;margin-bottom:4px}
+.user-avatar{width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid var(--border);flex-shrink:0}
+.user-name{font-size:14px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.user-email{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nav-panel{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:8px;display:flex;flex-direction:column;gap:2px}
+.nav-label{font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#c0c0c8;padding:8px 10px 4px}
+.tab-btn{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:9px;color:var(--muted);cursor:pointer;font-size:13.5px;font-weight:500;font-family:var(--font-body);background:none;border:none;text-align:left;transition:all .18s;width:100%}
+.tab-btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.75;flex-shrink:0;opacity:.5;transition:opacity .18s}
+.tab-btn:hover{background:var(--surface);color:var(--ink)}
+.tab-btn:hover svg{opacity:.75}
+.tab-btn.active{background:var(--ink);color:#fff;font-weight:600}
+.tab-btn.active svg{opacity:1}
+.sidebar-divider{border:none;border-top:1px solid var(--border);margin:4px 0}
+.logout-btn{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:9px;color:var(--red);font-size:13.5px;font-weight:500;font-family:var(--font-body);background:none;border:none;cursor:pointer;text-decoration:none;width:100%;text-align:left;transition:background .18s}
+.logout-btn:hover{background:var(--red-bg)}
+.logout-btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;flex-shrink:0}
+/* MAIN */
+.main{min-width:0}
+.page-header{display:flex;align-items:baseline;gap:10px;margin-bottom:20px}
+.page-title{font-family:var(--font-display);font-size:22px;font-weight:800;letter-spacing:-.3px;color:var(--ink)}
+/* CARD */
+.card{background:var(--white);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+/* TABS */
+.tab-content{display:none}
+.tab-content.active{display:block;animation:fadeUp .22s var(--ease) both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+/* PERSONAL */
+.profile-top{display:flex;align-items:center;justify-content:space-between;padding:24px 28px;border-bottom:1px solid var(--border)}
+.profile-left{display:flex;align-items:center;gap:16px}
+.avatar{width:64px;height:64px;border-radius:50%;object-fit:cover;border:2px solid var(--border);display:block}
+.profile-name{font-size:17px;font-weight:600;color:var(--ink);margin-bottom:3px}
+.profile-email{font-size:13px;color:var(--muted)}
+.btn-ghost{padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--ink-soft);font-size:13px;font-weight:500;font-family:var(--font-body);cursor:pointer;transition:all .18s}
+.btn-ghost:hover{background:var(--surface);border-color:#c0c0c8}
+.form-body{padding:24px 28px}
+.form-row{display:flex;gap:18px;margin-bottom:18px}
+.form-group{flex:1;display:flex;flex-direction:column}
+.form-group label{font-size:10.5px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
+.form-group input,.form-group textarea{padding:11px 13px;background:var(--surface);border:1px solid var(--border);border-radius:9px;color:var(--ink);font-size:14px;font-family:var(--font-body);transition:border-color .18s,box-shadow .18s;outline:none;resize:vertical}
+.form-group input::placeholder,.form-group textarea::placeholder{color:#c4c4cc}
+.form-group input:focus,.form-group textarea:focus{border-color:#888;box-shadow:0 0 0 3px rgba(0,0,0,0.04);background:var(--white)}
+.form-group input[readonly]{opacity:.5;cursor:not-allowed}
+.btn-save{padding:12px 26px;background:var(--ink);color:#fff;border:none;border-radius:9px;font-size:13.5px;font-weight:600;font-family:var(--font-body);cursor:pointer;transition:all .18s}
+.btn-save:hover{background:#1e1e24;transform:translateY(-1px)}
+/* ORDERS */
+.tab-inner{padding:24px 28px}
+.tab-section-title{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:18px}
+.order-card{border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:14px;transition:border-color .18s}
+.order-card:hover{border-color:#c8c8d0}
+.order-head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:var(--surface);border-bottom:1px solid var(--border)}
+.order-meta{display:flex;gap:36px}
+.order-meta-item{display:flex;flex-direction:column;gap:2px}
+.order-meta-key{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
+.order-meta-val{font-size:13.5px;font-weight:600;color:var(--ink)}
+.status-pill{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.3px}
+.status-delivered{background:var(--green-bg);color:var(--green);border:1px solid rgba(22,163,74,.18)}
+.status-processing{background:var(--blue-bg);color:var(--blue);border:1px solid rgba(59,130,246,.18)}
+.status-cancelled{background:var(--red-bg);color:var(--red);border:1px solid rgba(239,68,68,.18)}
+.status-shipped{background:var(--purple-bg);color:var(--purple);border:1px solid rgba(147,51,234,.18)}
+.status-default{background:var(--surface-2);color:var(--muted);border:1px solid var(--border)}
+.order-body{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;gap:16px}
+.order-product{display:flex;align-items:center;gap:14px}
+.order-img{width:54px;height:64px;border-radius:8px;object-fit:cover;border:1px solid var(--border);flex-shrink:0}
+.order-img-placeholder{width:54px;height:64px;border-radius:8px;background:var(--surface-2);border:1px solid var(--border);flex-shrink:0}
+.order-product-name{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:3px}
+.order-product-more{font-size:12px;color:var(--muted)}
+.order-actions{display:flex;gap:8px;flex-shrink:0}
+.btn-sm{padding:7px 14px;border-radius:8px;border:1px solid var(--border);background:var(--white);color:var(--ink);font-size:12.5px;font-weight:500;font-family:var(--font-body);cursor:pointer;text-decoration:none;display:inline-block;transition:all .15s}
+.btn-sm:hover{background:var(--surface);border-color:#c0c0c8}
+.empty-state{text-align:center;padding:60px 20px}
+.empty-icon{font-size:42px;opacity:.2;margin-bottom:12px}
+.empty-text{font-size:14px;color:var(--muted)}
+/* ADDRESSES */
+.address-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;margin-bottom:24px}
+.address-card{padding:16px 18px;border:1px solid var(--border);border-radius:12px;background:var(--surface);transition:border-color .18s}
+.address-card.is-default{border-color:rgba(22,163,74,.35)}
+.address-card:hover{border-color:#c0c0c8}
+.address-name{font-size:14px;font-weight:600;margin-bottom:7px}
+.address-text{font-size:13px;color:var(--ink-soft);line-height:1.6}
+.address-footer{display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
+.default-tag{font-size:11px;font-weight:700;color:var(--green);background:var(--green-bg);padding:3px 9px;border-radius:20px;border:1px solid rgba(22,163,74,.2)}
+.btn-link{font-size:12px;color:var(--muted);background:none;border:none;cursor:pointer;font-family:var(--font-body);text-decoration:none;transition:color .15s;padding:0}
+.btn-link:hover{color:var(--ink)}
+.btn-link.danger:hover{color:var(--red)}
+.add-address-box{border:1px solid var(--border);border-radius:12px;padding:20px;background:var(--surface)}
+.add-address-title{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:18px;display:flex;align-items:center;gap:8px}
+.add-address-box input,.add-address-box textarea{width:100%;padding:10px 12px;background:var(--white);border:1px solid var(--border);border-radius:8px;color:var(--ink);font-size:13.5px;font-family:var(--font-body);outline:none;transition:border-color .18s;margin-bottom:12px;resize:vertical}
+.add-address-box input::placeholder,.add-address-box textarea::placeholder{color:#c4c4cc}
+.add-address-box input:focus,.add-address-box textarea:focus{border-color:#888}
+.add-address-row{display:flex;gap:12px}
+.add-address-row input{flex:1}
+.checkbox-label{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-soft);margin-bottom:16px;cursor:pointer}
+.checkbox-label input[type="checkbox"]{accent-color:var(--ink);width:15px;height:15px}
+/* PAYMENT */
+.payment-card{display:flex;align-items:center;gap:16px;padding:16px 18px;border:1px solid var(--border);border-radius:12px;background:var(--surface);margin-bottom:12px}
+.payment-icon{width:44px;height:32px;border-radius:6px;background:var(--white);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.payment-name{font-size:14px;font-weight:600}
+.payment-desc{font-size:12.5px;color:var(--muted);margin-top:2px}
+.coming-soon-box{display:flex;align-items:center;gap:14px;padding:18px;border:1.5px dashed var(--border);border-radius:12px;color:var(--muted);font-size:13.5px}
+/* SETTINGS */
+.settings-section{margin-bottom:24px}
+.settings-label{font-size:10.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#c0c0c8;margin-bottom:10px}
+.settings-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border)}
+.settings-row:last-child{border-bottom:none}
+.settings-row-label{font-size:14px;font-weight:500}
+.settings-row-desc{font-size:12.5px;color:var(--muted);margin-top:2px}
+.danger-box{padding:18px;background:var(--red-bg);border:1px solid var(--red-border);border-radius:12px}
+.danger-title{font-size:13px;font-weight:700;color:var(--red);margin-bottom:5px}
+.danger-desc{font-size:12.5px;color:#b97070}
+/* MODALS */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);justify-content:center;align-items:center;z-index:2000}
+.modal-overlay.open{display:flex}
+.modal-box{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:30px;width:420px;max-width:90vw;position:relative;animation:modalIn .22s var(--ease) both}
+@keyframes modalIn{from{opacity:0;transform:scale(.96) translateY(8px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-title{font-family:var(--font-display);font-size:18px;font-weight:800;margin-bottom:20px}
+.modal-close{position:absolute;top:14px;right:14px;width:28px;height:28px;border-radius:7px;background:var(--surface);border:1px solid var(--border);color:var(--muted);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .18s;line-height:1}
+.modal-close:hover{background:var(--surface-2);color:var(--ink)}
+.success-banner{display:flex;align-items:center;gap:8px;background:var(--green-bg);border:1px solid rgba(22,163,74,.2);color:var(--green);padding:10px 14px;border-radius:8px;font-size:13.5px;margin-bottom:16px}
+.modal-box p{margin-bottom:14px}
+.modal-box p label{display:block;font-size:10.5px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
+.modal-box p input{width:100%;padding:11px 13px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--ink);font-size:14px;font-family:var(--font-body);outline:none;transition:border-color .18s}
+.modal-box p input:focus{border-color:#888;background:var(--white)}
+.tracking-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);justify-content:center;align-items:center;z-index:2000}
+.tracking-overlay.open{display:flex}
+.tracking-box{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:34px 30px;width:400px;max-width:90vw;text-align:center;position:relative;animation:modalIn .22s var(--ease) both}
+.tracking-icon{width:60px;height:60px;border-radius:50%;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 16px}
+.tracking-title{font-family:var(--font-display);font-size:20px;font-weight:800;margin-bottom:5px}
+.tracking-sub{font-size:13px;color:var(--muted);margin-bottom:20px}
+.tracking-num-box{display:flex;align-items:center;justify-content:space-between;background:var(--surface);border:1px solid var(--border);padding:11px 14px;border-radius:9px;margin-bottom:6px;font-family:monospace;font-size:14px;font-weight:700;letter-spacing:1px}
+.copy-btn{width:30px;height:30px;border-radius:6px;background:var(--surface-2);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;flex-shrink:0}
+.copy-btn:hover{background:var(--border)}
+.copy-btn svg{width:14px;height:14px;stroke:var(--muted);fill:none;stroke-width:2}
+.copy-msg{font-size:12px;color:var(--green);height:18px;margin-bottom:14px}
+.btn-track{display:inline-block;padding:12px 26px;background:var(--ink);color:#fff;text-decoration:none;border-radius:9px;font-size:13.5px;font-weight:600;font-family:var(--font-body);transition:background .18s;margin-top:6px}
+.btn-track:hover{background:#1e1e24}
+/* RESPONSIVE */
+@media(max-width:900px){
+  .page-wrapper{grid-template-columns:1fr;padding:20px 16px 60px}
+  .sidebar{position:relative;top:0}
+  .user-card{display:none}
+  .nav-panel{flex-direction:row;flex-wrap:wrap;gap:4px;padding:8px}
+  .tab-btn{flex:0 0 auto;padding:8px 14px}
+  .tab-btn svg{display:none}
+  .form-row{flex-direction:column}
+  .order-meta{gap:18px}
+  .address-grid{grid-template-columns:1fr}
+}
+@media(max-width:480px){
+  header{padding:0 16px}
+  .page-title{font-size:20px}
+  .profile-top{flex-direction:column;align-items:flex-start;gap:14px}
+  .order-body{flex-direction:column;align-items:flex-start}
+  .order-actions{flex-wrap:wrap}
+}
+</style>
+</head>
+<body>
+
+<!--header>
+  <a href="/" class="logo">HOODLAB</a>
+  <div class="header-icons">
+    <a href="{% url 'accounts:profile' %}" class="icon-btn">
+      <img src="https://cdn-icons-png.flaticon.com/512/1462/1462607.png" alt="Profile">
+    </a>
+    <div style="position:relative">
+      <a href="{% url 'cart:cart_detail' %}" class="icon-btn">
+        <img src="https://cdn-icons-png.flaticon.com/512/9630/9630118.png" alt="Cart">
+      </a>
+      {% if cart_count > 0 %}<span class="cart-count">{{ cart_count }}</span>{% endif %}
+    </div>
+  </div>
+</header-->
+
+<div class="page-wrapper">
+
+  <aside class="sidebar">
+    <div class="user-card">
+      <img src="https://randomuser.me/api/portraits/men/32.jpg" class="user-avatar" alt="avatar">
+      <div style="min-width:0">
+        <div class="user-name">{{ user.first_name }} {{ user.last_name }}</div>
+        <div class="user-email">{{ user.email }}</div>
+      </div>
+    </div>
+
+    <div class="nav-panel">
+      <div class="nav-label">Account</div>
+      <button class="tab-btn active" onclick="openTab('personal',this)">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>Personal Info
+      </button>
+      <button class="tab-btn" onclick="openTab('orders',this)">
+        <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3H8L2 7h20l-6-4z"/></svg>My Orders
+      </button>
+      <button class="tab-btn" onclick="openTab('addresses',this)">
+        <svg viewBox="0 0 24 24"><path d="M12 2C8.1 2 5 5.1 5 9c0 5.3 7 13 7 13s7-7.7 7-13c0-3.9-3.1-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>Addresses
+      </button>
+      <button class="tab-btn" onclick="openTab('payments',this)">
+        <svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>Payment Methods
+      </button>
+      <button class="tab-btn" onclick="openTab('settings',this)">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Settings
+      </button>
+      <hr class="sidebar-divider">
+      <a href="{% url 'accounts:logout' %}" class="logout-btn">
+        <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Log Out
+      </a>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="page-header">
+      <h1 class="page-title" id="pageTitle">Personal Information</h1>
+    </div>
+
+    <div class="card">
+
+      <!-- PERSONAL TAB -->
+      <div id="personal" class="tab-content active">
+        <div class="profile-top">
+          <div class="profile-left">
+            <img src="https://randomuser.me/api/portraits/men/32.jpg" class="avatar" alt="avatar">
+            <div>
+              <div class="profile-name">{{ user.first_name }} {{ user.last_name }}</div>
+              <div class="profile-email">{{ user.email }}</div>
+            </div>
+          </div>
+          <button class="btn-ghost">Change Avatar</button>
+        </div>
+        <form method="POST" class="form-body">
+          {% csrf_token %}
+          <div class="form-row">
+            <div class="form-group"><label>First Name</label><input type="text" name="first_name" value="{{ user.first_name }}" placeholder="First name"></div>
+            <div class="form-group"><label>Last Name</label><input type="text" name="last_name" value="{{ user.last_name }}" placeholder="Last name"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Email Address</label><input type="email" value="{{ user.email }}" readonly></div>
+            <div class="form-group"><label>Phone Number</label><input type="text" name="phone" value="{{ user.phone }}" placeholder="+91 00000 00000"></div>
+          </div>
+          <div class="form-group" style="margin-bottom:20px"><label>Shipping Address</label><textarea name="shipping_address" rows="3" placeholder="Default shipping address">{{ user.shipping_address }}</textarea></div>
+          <button type="submit" class="btn-save">Save Changes</button>
+        </form>
+      </div>
+
+      <!-- ORDERS TAB -->
+      <div id="orders" class="tab-content">
+        <div class="tab-inner">
+          <div class="tab-section-title">Order History</div>
+          {% if orders %}
+            {% for order in orders %}
+            <div class="order-card">
+              <div class="order-head">
+                <div class="order-meta">
+                  <div class="order-meta-item"><span class="order-meta-key">Order</span><span class="order-meta-val">#HL-{{ order.id }}</span></div>
+                  <div class="order-meta-item"><span class="order-meta-key">Date</span><span class="order-meta-val">{{ order.created_at|date:"M d, Y" }}</span></div>
+                  <div class="order-meta-item"><span class="order-meta-key">Total</span><span class="order-meta-val">₹{{ order.total_amount }}</span></div>
+                </div>
+                <span class="status-pill {% if order.status|lower == 'delivered' %}status-delivered{% elif order.status|lower == 'processing' %}status-processing{% elif order.status|lower == 'cancelled' %}status-cancelled{% elif order.status|lower == 'shipped' %}status-shipped{% else %}status-default{% endif %}">{{ order.status }}</span>
+              </div>
+              <div class="order-body">
+                <div class="order-product">
+                  {% with item=order.items.first %}{% if item %}
+                    {% if item.product.image %}<img src="{{ item.product.image.url }}" class="order-img" alt="">{% else %}<div class="order-img-placeholder"></div>{% endif %}
+                    <div>
+                      <div class="order-product-name">{{ item.product.name }}</div>
+                      {% if order.items.count > 1 %}<div class="order-product-more">+ {{ order.items.count|add:"-1" }} more</div>{% endif %}
+                    </div>
+                  {% endif %}{% endwith %}
+                </div>
+                <div class="order-actions">
+                  {% if order.status|lower == "delivered" %}<button class="btn-sm">Buy Again</button>{% endif %}
+                  {% if order.tracking_id %}<button class="btn-sm" onclick="openTrackingModal('{{ order.tracking_id }}')">Track Package</button>{% endif %}
+                  <a href="{% url 'orders:order_detail' order.id %}" class="btn-sm">View Order</a>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          {% else %}
+            <div class="empty-state"><div class="empty-icon">📦</div><div class="empty-text">No orders placed yet.</div></div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- ADDRESSES TAB -->
+      <div id="addresses" class="tab-content">
+        <div class="tab-inner">
+          <div class="tab-section-title">Saved Addresses</div>
+          {% if addresses %}
+          <div class="address-grid">
+            {% for address in addresses %}
+            <div class="address-card {% if address.is_default %}is-default{% endif %}">
+              <div class="address-name">{{ address.full_name }}</div>
+              <div class="address-text">{{ address.address_line }}<br>{{ address.city }}, {{ address.state }} — {{ address.zip_code }}<br>{{ address.phone }}</div>
+              <div class="address-footer">
+                {% if address.is_default %}<span class="default-tag">✓ Default</span>
+                {% else %}<a href="{% url 'accounts:set_default_address' address.id %}" class="btn-link">Set as default</a>{% endif %}
+                <a href="{% url 'accounts:delete_address' address.id %}" class="btn-link danger">Delete</a>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          {% else %}<p style="font-size:13.5px;color:var(--muted);margin-bottom:20px">No addresses saved yet.</p>{% endif %}
+
+          <div class="add-address-box">
+            <div class="add-address-title">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add New Address
+            </div>
+            <form method="post" action="{% url 'accounts:add_address' %}">
+              {% csrf_token %}
+              <div class="add-address-row"><input type="text" name="full_name" placeholder="Full Name" required><input type="text" name="phone" placeholder="Phone" required></div>
+              <textarea name="address_line" placeholder="Street Address" rows="2" required></textarea>
+              <div class="add-address-row"><input type="text" name="city" placeholder="City" required><input type="text" name="state" placeholder="State" required><input type="text" name="zip_code" placeholder="ZIP" required></div>
+              <label class="checkbox-label"><input type="checkbox" name="is_default"> Set as default address</label>
+              <button type="submit" class="btn-save">Add Address</button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- PAYMENT TAB -->
+      <div id="payments" class="tab-content">
+        <div class="tab-inner">
+          <div class="tab-section-title">Payment Methods</div>
+          {% for method in payment_methods %}
+            <div class="payment-card">
+              <div class="payment-icon">💳</div>
+              <div><div class="payment-name">{{ method.get_payment_type_display }}</div><div class="payment-desc">{{ method.provider_name }}</div></div>
+            </div>
+          {% empty %}
+            <div class="coming-soon-box"><span style="font-size:22px">🔒</span><div><div style="font-weight:600;margin-bottom:3px">Saved Cards — Coming Soon</div><div style="font-size:12.5px">We'll notify you when card management is available.</div></div></div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- SETTINGS TAB -->
+      <div id="settings" class="tab-content">
+        <div class="tab-inner">
+          <div class="settings-section">
+            <div class="settings-label">Security</div>
+            <div class="settings-row">
+              <div><div class="settings-row-label">Password</div><div class="settings-row-desc">Update your account password</div></div>
+              <button onclick="openPasswordModal()" class="btn-ghost">Change Password</button>
+            </div>
+          </div>
+          <div class="danger-box"><div class="danger-title">⚠ Danger Zone</div><div class="danger-desc">Delete Account — coming soon. This action is permanent and irreversible.</div></div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- PASSWORD MODAL -->
+<div id="passwordModal" class="modal-overlay">
+  <div class="modal-box">
+    <div class="modal-title">Change Password</div>
+    <button class="modal-close" onclick="closePasswordModal()">✕</button>
+    {% if password_success %}<div class="success-banner"><span>✓</span> Password updated successfully!</div>{% endif %}
+    <form method="POST">
+      {% csrf_token %}
+      {{ password_form.as_p }}
+      <button type="submit" class="btn-save" style="width:100%;margin-top:6px">Update Password</button>
+    </form>
+  </div>
+</div>
+
+<!-- TRACKING MODAL -->
+<div id="trackingModal" class="tracking-overlay">
+  <div class="tracking-box">
+    <button class="modal-close" onclick="closeTrackingModal()">✕</button>
+    <div class="tracking-icon">📦</div>
+    <div class="tracking-title">Track Your Package</div>
+    <div class="tracking-sub">Your order has been shipped and is on its way</div>
+    <div class="tracking-num-box">
+      <span id="trackingNumberDisplay"></span>
+      <button class="copy-btn" onclick="copyTrackingNumber()"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+    </div>
+    <div class="copy-msg" id="copyMsg"></div>
+    <a id="trackNowBtn" href="https://www.tpcindia.com" target="_blank" class="btn-track">Track on Carrier →</a>
+  </div>
+</div>
+
+<script>
+function openTab(name,el){
+  document.querySelectorAll(".tab-content").forEach(t=>t.classList.remove("active"));
+  document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
+  document.getElementById(name).classList.add("active");
+  if(el)el.classList.add("active");
+  const titles={personal:"Personal Information",orders:"My Orders",addresses:"My Addresses",payments:"Payment Methods",settings:"Account Settings"};
+  document.getElementById("pageTitle").innerText=titles[name];
+  localStorage.setItem("activeTab",name);
+}
+function openPasswordModal(){document.getElementById("passwordModal").classList.add("open")}
+function closePasswordModal(){document.getElementById("passwordModal").classList.remove("open")}
+document.getElementById("passwordModal").addEventListener("click",function(e){if(e.target===this)closePasswordModal()});
+function openTrackingModal(id){
+  document.getElementById("trackingNumberDisplay").innerText=id;
+  document.getElementById("trackNowBtn").href="https://www.tpcindia.com";
+  document.getElementById("trackingModal").classList.add("open");
+}
+function closeTrackingModal(){document.getElementById("trackingModal").classList.remove("open")}
+document.getElementById("trackingModal").addEventListener("click",function(e){if(e.target===this)closeTrackingModal()});
+function copyTrackingNumber(){
+  navigator.clipboard.writeText(document.getElementById("trackingNumberDisplay").innerText);
+  const m=document.getElementById("copyMsg");
+  m.innerText="Copied to clipboard ✓";
+  setTimeout(()=>{m.innerText=""},1800);
+}
+document.addEventListener("DOMContentLoaded",function(){
+  const hash=window.location.hash;
+  if(hash){const n=hash.replace("#","");const b=document.querySelector(`[onclick*="${n}"]`);openTab(n,b);history.replaceState(null,null,window.location.pathname);}
+  else{const s=localStorage.getItem("activeTab")||"personal";const b=document.querySelector(`[onclick*="${s}"]`);openTab(s,b);}
+  if(document.body.dataset.openPassword==="true"){openTab("settings");openPasswordModal();}
+  {% if password_success %}openTab("settings");openPasswordModal();setTimeout(closePasswordModal,1500);{% endif %}
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,427 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Checkout | HOODLAB{% endblock %}
+
+{% block content %}
+
+<style>
+:root {
+  --bg: #f4f5f7;
+  --green: #16a34a; --green-bg: #f0fdf4;
+  --red: #ef4444;   --red-bg: #fef2f2;
+}
+body { background: var(--bg); }
+
+.co-wrapper {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+.co-heading {
+  font-family: var(--font-display);
+  font-size: 28px; font-weight: 800;
+  letter-spacing: -.5px; color: var(--ink);
+  margin-bottom: 28px;
+}
+
+/* GRID */
+.co-grid {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 24px;
+  align-items: start;
+}
+
+/* SECTION CARD */
+.co-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.co-card:last-child { margin-bottom: 0; }
+
+.co-card-head {
+  display: flex; align-items: center; gap: 10px;
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--border);
+}
+.co-card-num {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--ink); color: #fff;
+  font-family: var(--font-display); font-size: 12px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.co-card-title {
+  font-family: var(--font-display); font-size: 15px; font-weight: 700;
+}
+.co-card-body { padding: 20px 24px; }
+
+/* COUPON */
+.coupon-row { display: flex; gap: 10px; }
+.coupon-row input {
+  flex: 1; padding: 11px 14px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 9px; color: var(--ink);
+  font-size: 14px; font-family: var(--font-body);
+  outline: none; transition: border-color .18s; letter-spacing: 1px;
+}
+.coupon-row input::placeholder { color: #c4c4cc; letter-spacing: 0; }
+.coupon-row input:focus { border-color: #888; background: #fff; }
+
+.btn-apply {
+  padding: 11px 20px; background: var(--ink); color: #fff;
+  border: none; border-radius: 9px;
+  font-size: 13px; font-weight: 600; font-family: var(--font-body);
+  cursor: pointer; transition: all .18s; white-space: nowrap;
+}
+.btn-apply:hover { background: #1e1e24; }
+
+.coupon-success {
+  display: flex; align-items: center; gap: 8px;
+  margin-top: 12px; font-size: 13.5px;
+  color: var(--green); font-weight: 600;
+}
+.coupon-remove {
+  color: var(--red); font-size: 12.5px; font-weight: 600;
+  background: none; border: none; cursor: pointer;
+  font-family: var(--font-body); text-decoration: none; margin-left: 4px;
+}
+.coupon-remove:hover { text-decoration: underline; }
+
+/* ADDRESS */
+.addr-card {
+  border: 1.5px solid var(--border);
+  border-radius: 12px; margin-bottom: 10px;
+  transition: border-color .18s; overflow: hidden;
+}
+.addr-card:has(input:checked) { border-color: var(--ink); background: var(--surface); }
+.addr-card:hover { border-color: #b0b0b8; }
+
+.addr-label {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 16px 18px; cursor: pointer; width: 100%;
+}
+.addr-radio {
+  margin-top: 3px; accent-color: var(--ink);
+  width: 16px; height: 16px; flex-shrink: 0; cursor: pointer;
+}
+.addr-name { font-size: 14px; font-weight: 600; margin-bottom: 5px; color: var(--ink); }
+.addr-text { font-size: 13px; color: var(--ink-soft); line-height: 1.7; }
+.addr-default-tag {
+  display: inline-block; margin-top: 6px;
+  font-size: 10.5px; font-weight: 700;
+  color: var(--green); background: var(--green-bg);
+  padding: 2px 8px; border-radius: 20px;
+  border: 1px solid rgba(22,163,74,.2);
+}
+
+.no-address { font-size: 13.5px; color: var(--muted); margin-bottom: 14px; }
+
+.manage-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 13px; font-weight: 600; color: var(--ink-soft);
+  text-decoration: none; margin-top: 4px;
+  padding: 8px 14px; border: 1px solid var(--border);
+  border-radius: 8px; background: var(--surface); transition: all .18s;
+}
+.manage-link:hover { background: var(--surface-2); border-color: #c0c0c8; color: var(--ink); }
+.manage-link svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2.5; }
+
+/* PAYMENT OPTIONS */
+.pay-option {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 16px 18px;
+  border: 1.5px solid var(--border); border-radius: 12px;
+  margin-bottom: 10px; cursor: pointer; transition: border-color .18s;
+}
+.pay-option:has(input:checked) { border-color: var(--ink); background: var(--surface); }
+.pay-option:hover { border-color: #b0b0b8; }
+.pay-option:last-of-type { margin-bottom: 0; }
+
+.pay-radio {
+  margin-top: 3px; accent-color: var(--ink);
+  width: 16px; height: 16px; cursor: pointer; flex-shrink: 0;
+}
+.pay-name { font-size: 14px; font-weight: 600; color: var(--ink); }
+.pay-desc { font-size: 12.5px; color: var(--muted); margin-top: 3px; }
+.pay-icon {
+  width: 36px; height: 36px; border-radius: 9px;
+  background: var(--surface-2); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0; margin-left: auto;
+}
+
+/* PLACE ORDER BTN */
+.btn-place {
+  width: 100%; padding: 15px;
+  background: var(--ink); color: #fff;
+  border: none; border-radius: 12px;
+  font-family: var(--font-display); font-size: 15px; font-weight: 700;
+  letter-spacing: .5px; cursor: pointer; transition: all .2s;
+  margin-top: 16px;
+}
+.btn-place:hover { background: #1e1e24; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,0,0,.15); }
+
+/* SUMMARY PANEL */
+.co-summary {
+  background: #fff; border: 1px solid var(--border);
+  border-radius: 16px; overflow: hidden;
+  position: sticky; top: 84px;
+}
+.co-summary-head {
+  padding: 18px 22px; border-bottom: 1px solid var(--border);
+}
+.co-summary-title { font-family: var(--font-display); font-size: 15px; font-weight: 700; }
+
+.co-items { padding: 4px 0; }
+.co-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 13px 22px; border-bottom: 1px solid var(--border);
+}
+.co-item:last-child { border-bottom: none; }
+.co-item-img {
+  width: 44px; height: 52px; border-radius: 7px;
+  object-fit: cover; border: 1px solid var(--border); flex-shrink: 0;
+}
+.co-item-name { font-size: 13.5px; font-weight: 600; margin-bottom: 3px; }
+.co-item-meta { font-size: 12px; color: var(--muted); }
+.co-item-price { font-size: 13.5px; font-weight: 600; margin-left: auto; flex-shrink: 0; }
+
+.co-totals { padding: 16px 22px; }
+.co-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 6px 0; font-size: 14px; color: var(--ink-soft);
+}
+.co-row.discount { color: var(--green); }
+.co-divider { border: none; border-top: 1px solid var(--border); margin: 10px 0; }
+.co-total-row {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 10px 0 4px;
+}
+.co-total-label { font-family: var(--font-display); font-size: 15px; font-weight: 700; }
+.co-total-val { font-family: var(--font-display); font-size: 22px; font-weight: 800; }
+
+.co-note {
+  font-size: 12px; color: var(--muted);
+  padding: 0 22px 16px;
+  display: flex; align-items: center; gap: 5px;
+}
+.co-note svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; flex-shrink: 0; }
+
+/* TRUST STRIP */
+.trust-strip {
+  display: flex; gap: 0;
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+}
+.trust-item {
+  flex: 1; display: flex; flex-direction: column; align-items: center;
+  gap: 5px; text-align: center; padding: 14px 10px;
+  border-right: 1px solid var(--border);
+}
+.trust-item:last-child { border-right: none; }
+.trust-item svg { width: 18px; height: 18px; stroke: var(--muted); fill: none; stroke-width: 1.75; }
+.trust-item span { font-size: 10.5px; color: var(--muted); line-height: 1.4; }
+
+/* RESPONSIVE */
+@media (max-width: 860px) {
+  .co-grid { grid-template-columns: 1fr; }
+  .co-summary { position: relative; top: 0; order: -1; }
+}
+@media (max-width: 480px) {
+  .co-wrapper { padding: 24px 16px 60px; }
+  .co-heading { font-size: 24px; }
+  .co-card-body { padding: 16px 18px; }
+}
+</style>
+
+<div class="co-wrapper">
+  <h1 class="co-heading">Checkout</h1>
+
+  <div class="co-grid">
+
+    <!-- ─── LEFT ─── -->
+    <div>
+
+      <!-- COUPON -->
+      <div class="co-card">
+        <div class="co-card-head">
+          <div class="co-card-num" style="font-size:14px;letter-spacing:0">%</div>
+          <span class="co-card-title">Apply Coupon</span>
+        </div>
+        <div class="co-card-body">
+          <form method="POST" action="{% url 'orders:apply_coupon' %}">
+            {% csrf_token %}
+            <div class="coupon-row">
+              <input type="text" name="coupon" placeholder="Enter coupon code" autocomplete="off">
+              <button type="submit" class="btn-apply">Apply</button>
+            </div>
+          </form>
+          {% if discount %}
+            <div class="coupon-success">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Coupon applied — ₹{{ discount }} off
+              <a href="{% url 'orders:remove_coupon' %}" class="coupon-remove">Remove</a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <form method="post">
+        {% csrf_token %}
+
+        <!-- ADDRESS -->
+        <div class="co-card">
+          <div class="co-card-head">
+            <div class="co-card-num">1</div>
+            <span class="co-card-title">Delivery Address</span>
+          </div>
+          <div class="co-card-body">
+            {% if addresses %}
+              {% for address in addresses %}
+              <div class="addr-card">
+                <label class="addr-label">
+                  <input type="radio" class="addr-radio" name="address_id" value="{{ address.id }}" {% if address.is_default %}checked{% endif %} required>
+                  <div>
+                    <div class="addr-name">{{ address.full_name }}</div>
+                    <div class="addr-text">
+                      {{ address.address_line }}<br>
+                      {{ address.city }} — {{ address.postal_code }}<br>
+                      {{ address.phone }}
+                    </div>
+                    {% if address.is_default %}<span class="addr-default-tag">✓ Default</span>{% endif %}
+                  </div>
+                </label>
+              </div>
+              {% endfor %}
+            {% else %}
+              <p class="no-address">No saved addresses found. Add one to continue.</p>
+            {% endif %}
+            <a href="{% url 'accounts:profile' %}#addresses" class="manage-link">
+              <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Manage Addresses
+            </a>
+          </div>
+        </div>
+
+        <!-- PAYMENT -->
+        <div class="co-card">
+          <div class="co-card-head">
+            <div class="co-card-num">2</div>
+            <span class="co-card-title">Payment Method</span>
+          </div>
+          <div class="co-card-body">
+
+            <label class="pay-option">
+              <input type="radio" class="pay-radio" name="payment_method" value="UPI" checked>
+              <div>
+                <div class="pay-name">Pay via UPI</div>
+                <div class="pay-desc">Free delivery on all UPI orders</div>
+              </div>
+              <div class="pay-icon">⚡</div>
+            </label>
+
+            <label class="pay-option">
+              <input type="radio" class="pay-radio" name="payment_method" value="COD">
+              <div>
+                <div class="pay-name">Cash on Delivery</div>
+                <div class="pay-desc">₹99 delivery charge applies</div>
+              </div>
+              <div class="pay-icon">💵</div>
+            </label>
+
+            <button type="submit" class="btn-place">Place Order →</button>
+          </div>
+        </div>
+
+      </form>
+    </div>
+
+    <!-- ─── RIGHT (summary) ─── -->
+    <div class="co-summary">
+      <div class="co-summary-head">
+        <div class="co-summary-title">Order Summary</div>
+      </div>
+
+      <div class="co-items">
+        {% for item in cart_items %}
+        <div class="co-item">
+          {% if item.variant.product.image %}
+            <img src="{{ item.variant.product.image.url }}" class="co-item-img" alt="{{ item.variant.product.name }}">
+          {% else %}
+            <div class="co-item-img" style="background:var(--surface-2)"></div>
+          {% endif %}
+          <div style="min-width:0">
+            <div class="co-item-name">{{ item.variant.product.name }}</div>
+            <div class="co-item-meta">{{ item.variant.size }} · qty {{ item.quantity }}</div>
+          </div>
+          <div class="co-item-price">₹{{ item.variant.price }}</div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <div class="co-totals">
+        <div class="co-row"><span>Subtotal</span><span>₹{{ total }}</span></div>
+        {% if discount %}
+        <div class="co-row discount"><span>Coupon discount</span><span>− ₹{{ discount }}</span></div>
+        {% endif %}
+        <div class="co-row">
+          <span>Delivery</span>
+          <span id="delivery-display" style="color:var(--green)">Free</span>
+        </div>
+        <hr class="co-divider">
+        <div class="co-total-row">
+          <span class="co-total-label">Total</span>
+          <span class="co-total-val">₹<span id="total-amount">{{ final_total }}</span></span>
+        </div>
+      </div>
+
+      <p class="co-note">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        COD orders include a ₹99 delivery charge
+      </p>
+
+      <div class="trust-strip">
+        <div class="trust-item">
+          <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <span>Secure<br>Checkout</span>
+        </div>
+        <div class="trust-item">
+          <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span>Fast<br>Delivery</span>
+        </div>
+        <div class="trust-item">
+          <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.5 15a9 9 0 1 1-2.3-5.2L23 10"/></svg>
+          <span>Easy<br>Returns</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const radios  = document.querySelectorAll('input[name="payment_method"]');
+  const totalEl = document.getElementById("total-amount");
+  const delivEl = document.getElementById("delivery-display");
+  const base    = parseFloat("{{ final_total|floatformat:2 }}");
+
+  radios.forEach(r => r.addEventListener("change", function () {
+    if (this.value === "COD") {
+      totalEl.innerText = (base + 99).toFixed(2);
+      delivEl.innerText = "₹99";
+      delivEl.style.color = "var(--ink)";
+    } else {
+      totalEl.innerText = base.toFixed(2);
+      delivEl.innerText = "Free";
+      delivEl.style.color = "var(--green)";
+    }
+  }));
+});
+</script>
+
+{% endblock %}

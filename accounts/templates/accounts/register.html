@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: "Segoe UI", system-ui, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+    }
+
+    .register-card {
+      background: #fff;
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 400px;
+      border-radius: 14px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+      animation: fadeIn 0.6s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      font-size: 1.6rem;
+      color: #222;
+    }
+
+    .field {
+      position: relative;
+      margin-bottom: 1.4rem;
+    }
+
+    .field input {
+      width: 100%;
+      padding: 12px 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 15px;
+      outline: none;
+    }
+
+    .field input:focus {
+      border-color: #667eea;
+    }
+
+    .error {
+      background: #ffe5e5;
+      color: #c62828;
+      padding: 10px;
+      border-radius: 6px;
+      font-size: 14px;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background: #667eea;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    button:hover {
+      background: #5a67d8;
+    }
+
+    button.loading {
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
+    .login-link {
+      margin-top: 1rem;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .login-link a {
+      color: #667eea;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .login-link a:hover {
+      text-decoration: underline;
+    }
+
+    .footer {
+      margin-top: 1.5rem;
+      text-align: center;
+      font-size: 13px;
+      color: #777;
+    }
+  </style>
+</head>
+
+<body>
+
+  <form method="post" class="register-card" onsubmit="handleRegister(this)">
+    {% csrf_token %}
+
+    <h2>Create Account</h2>
+
+    {% if form.errors %}
+      <div class="error">
+        Please correct the errors below.
+      </div>
+    {% endif %}
+
+    <div class="field">
+      <input type="text" name="username" required placeholder="Username">
+    </div>
+
+    <div class="field">
+      <input type="email" name="email" required placeholder="Email">
+    </div>
+
+    <div class="field">
+      <input type="password" name="password1" required placeholder="Password">
+    </div>
+
+    <div class="field">
+      <input type="password" name="password2" required placeholder="Confirm Password">
+    </div>
+
+    <button type="submit" id="registerBtn">Register</button>
+
+    <div class="login-link">
+      Already have an account?
+      <a href="{% url 'accounts:login' %}">Login here</a>
+    </div>
+
+    <div class="footer">
+      Secure Registration
+    </div>
+  </form>
+
+  <script>
+    function handleRegister(form) {
+      const btn = document.getElementById("registerBtn");
+      btn.textContent = "Creating account...";
+      btn.classList.add("loading");
+    }
+  </script>
+
+</body>
+</html>

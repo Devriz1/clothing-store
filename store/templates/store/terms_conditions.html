@@ -1,0 +1,440 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Terms & Conditions | HOODLAB{% endblock %}
+
+{% block content %}
+
+<style>
+:root {
+  --bg: #f4f5f7;
+  --green: #16a34a; --green-bg: #f0fdf4;
+  --blue: #3b82f6;  --blue-bg: #eff6ff;
+  --orange: #f97316; --orange-bg: #fff7ed;
+}
+body { background: var(--bg); }
+
+.co-wrapper {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+.co-heading {
+  font-family: var(--font-display);
+  font-size: 28px; font-weight: 800;
+  letter-spacing: -.5px; color: var(--ink);
+  margin-bottom: 6px;
+}
+.co-subheading {
+  font-size: 13.5px; color: var(--muted);
+  margin-bottom: 28px;
+}
+
+/* GRID */
+.co-grid {
+  display: grid;
+  grid-template-columns: 1fr 260px;
+  gap: 24px;
+  align-items: start;
+}
+
+/* SECTION CARD */
+.co-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.co-card:last-child { margin-bottom: 0; }
+
+.co-card-head {
+  display: flex; align-items: center; gap: 10px;
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--border);
+}
+.co-card-num {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--ink); color: #fff;
+  font-family: var(--font-display); font-size: 12px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.co-card-title {
+  font-family: var(--font-display); font-size: 15px; font-weight: 700;
+}
+.co-card-body { padding: 22px 24px; }
+
+/* BODY TEXT */
+.policy-text {
+  font-size: 14px; color: var(--ink-soft);
+  line-height: 1.8; margin: 0;
+}
+.policy-text strong { color: var(--ink); font-weight: 700; }
+
+/* BULLET LIST */
+.policy-list {
+  margin: 12px 0 0 0; padding: 0; list-style: none;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.policy-list li {
+  display: flex; align-items: flex-start; gap: 10px;
+  font-size: 14px; color: var(--ink-soft); line-height: 1.6;
+}
+.policy-list li::before {
+  content: "";
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--muted); flex-shrink: 0; margin-top: 7px;
+}
+.policy-list li strong { color: var(--ink); font-weight: 700; }
+
+/* HIGHLIGHT BOXES */
+.policy-highlight {
+  display: flex; align-items: flex-start; gap: 12px;
+  border-radius: 10px; padding: 14px 16px; margin-top: 14px;
+}
+.policy-highlight svg { width: 16px; height: 16px; fill: none; stroke-width: 2.5; flex-shrink: 0; margin-top: 1px; }
+.policy-highlight p { font-size: 13.5px; font-weight: 600; margin: 0; line-height: 1.6; }
+
+.highlight-green  { background: var(--green-bg);  border: 1px solid rgba(22,163,74,.2); }
+.highlight-green  svg { stroke: var(--green); }
+.highlight-green  p   { color: var(--green); }
+
+.highlight-orange { background: var(--orange-bg); border: 1px solid rgba(249,115,22,.2); }
+.highlight-orange svg { stroke: var(--orange); }
+.highlight-orange p   { color: var(--orange); }
+
+.highlight-blue   { background: var(--blue-bg);   border: 1px solid rgba(59,130,246,.2); }
+.highlight-blue   svg { stroke: var(--blue); }
+.highlight-blue   p   { color: var(--blue); }
+
+/* PAY METHOD ROWS — same as .pay-option but read-only */
+.pay-row {
+  display: flex; align-items: center; gap: 14px;
+  padding: 13px 16px;
+  border: 1.5px solid var(--border); border-radius: 12px;
+  margin-bottom: 10px;
+}
+.pay-row:last-child { margin-bottom: 0; }
+.pay-name { font-size: 14px; font-weight: 600; color: var(--ink); }
+.pay-desc { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+.pay-icon {
+  width: 36px; height: 36px; border-radius: 9px;
+  background: var(--surface-2); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0; margin-left: auto;
+}
+
+/* SUMMARY SIDEBAR */
+.co-summary {
+  background: #fff; border: 1px solid var(--border);
+  border-radius: 16px; overflow: hidden;
+  position: sticky; top: 84px;
+}
+.co-summary-head {
+  padding: 18px 22px; border-bottom: 1px solid var(--border);
+}
+.co-summary-title { font-family: var(--font-display); font-size: 15px; font-weight: 700; }
+
+/* TOC */
+.toc-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 20px; border-bottom: 1px solid var(--border);
+  text-decoration: none; font-size: 13px;
+  color: var(--ink-soft); transition: background .15s; cursor: pointer;
+}
+.toc-item:last-of-type { border-bottom: none; }
+.toc-item:hover { background: var(--surface); color: var(--ink); }
+.toc-item.active { background: var(--surface); color: var(--ink); font-weight: 600; }
+
+.toc-num {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--surface); border: 1px solid var(--border);
+  font-family: var(--font-display); font-size: 10px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; color: var(--muted); transition: all .15s;
+}
+.toc-item:hover .toc-num,
+.toc-item.active .toc-num { background: var(--ink); border-color: var(--ink); color: #fff; }
+
+/* Contact row */
+.co-item {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 20px; border-top: 1px solid var(--border);
+  text-decoration: none; transition: background .15s;
+}
+.co-item:hover { background: var(--surface); }
+.co-item-icon {
+  width: 36px; height: 36px; border-radius: 9px;
+  background: var(--surface); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.co-item-icon svg { width: 15px; height: 15px; stroke: var(--muted); fill: none; stroke-width: 1.75; }
+.co-item-label { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 2px; }
+.co-item-val   { font-size: 13px; font-weight: 600; color: var(--ink); }
+
+/* TRUST STRIP */
+.trust-strip {
+  display: flex;
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+}
+.trust-item {
+  flex: 1; display: flex; flex-direction: column; align-items: center;
+  gap: 5px; text-align: center; padding: 14px 8px;
+  border-right: 1px solid var(--border);
+}
+.trust-item:last-child { border-right: none; }
+.trust-item svg { width: 18px; height: 18px; stroke: var(--muted); fill: none; stroke-width: 1.75; }
+.trust-item span { font-size: 10px; color: var(--muted); line-height: 1.4; }
+
+/* RESPONSIVE */
+@media (max-width: 860px) {
+  .co-grid { grid-template-columns: 1fr; }
+  .co-summary { position: relative; top: 0; order: -1; }
+  .toc-list { display: flex; overflow-x: auto; }
+  .toc-item { border-bottom: none; border-right: 1px solid var(--border); white-space: nowrap; flex-shrink: 0; }
+  .toc-item:last-of-type { border-right: none; }
+}
+@media (max-width: 480px) {
+  .co-wrapper { padding: 24px 16px 60px; }
+  .co-heading  { font-size: 24px; }
+  .co-card-body { padding: 16px 18px; }
+}
+</style>
+
+<div class="co-wrapper">
+
+  <h1 class="co-heading">Terms &amp; Conditions</h1>
+  <p class="co-subheading">Please read these terms carefully before placing an order.</p>
+
+  <div class="co-grid">
+
+    <!-- ─── LEFT: SECTIONS ─── -->
+    <div>
+
+      <!-- 1. Products -->
+      <div class="co-card" id="section-1">
+        <div class="co-card-head">
+          <div class="co-card-num">1</div>
+          <span class="co-card-title">Products</span>
+        </div>
+        <div class="co-card-body">
+          <p class="policy-text">HOODLAB primarily sells premium hoodies and clothing items. All products are quality-checked before dispatch.</p>
+        </div>
+      </div>
+
+      <!-- 2. Orders -->
+      <div class="co-card" id="section-2">
+        <div class="co-card-head">
+          <div class="co-card-num">2</div>
+          <span class="co-card-title">Orders</span>
+        </div>
+        <div class="co-card-body">
+          <p class="policy-text">Once an order is placed, it will be processed for shipment after payment verification. You will receive an update once your order is confirmed and dispatched.</p>
+        </div>
+      </div>
+
+      <!-- 3. Cancellation -->
+      <div class="co-card" id="section-3">
+        <div class="co-card-head">
+          <div class="co-card-num">3</div>
+          <span class="co-card-title">Order Cancellation</span>
+        </div>
+        <div class="co-card-body">
+          <p class="policy-text">Customers may cancel their order only before the product has been shipped.</p>
+          <div class="policy-highlight highlight-orange">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <p>Once shipped, cancellations are no longer possible. Contact us immediately if you need to cancel.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Returns & Refunds -->
+      <div class="co-card" id="section-4">
+        <div class="co-card-head">
+          <div class="co-card-num">4</div>
+          <span class="co-card-title">Returns &amp; Refunds</span>
+        </div>
+        <div class="co-card-body">
+          <p class="policy-text">We offer refunds only if the product is damaged during shipping. To qualify for a refund:</p>
+          <ul class="policy-list">
+            <li>You must record a full unboxing video.</li>
+            <li>The damage must be clearly visible in the video.</li>
+            <li>The issue must be reported within <strong>5 days</strong> of delivery.</li>
+          </ul>
+          <div class="policy-highlight highlight-green">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            <p>Approved refunds are processed within 5–7 business days to your original payment method.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Shipping -->
+      <div class="co-card" id="section-5">
+        <div class="co-card-head">
+          <div class="co-card-num">5</div>
+          <span class="co-card-title">Shipping</span>
+        </div>
+        <div class="co-card-body">
+          <p class="policy-text">Currently, we ship only within India. Orders are typically dispatched within 1–2 business days after payment verification.</p>
+          <div class="policy-highlight highlight-blue">
+            <svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 5v4h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            <p>Free delivery on all UPI orders. ₹99 delivery charge applies for Cash on Delivery.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. Payment Methods -->
+      <div class="co-card" id="section-6">
+        <div class="co-card-head">
+          <div class="co-card-num">6</div>
+          <span class="co-card-title">Payment Methods</span>
+        </div>
+        <div class="co-card-body">
+          <p class="policy-text" style="margin-bottom:16px">We support the following payment methods:</p>
+
+          <div class="pay-row">
+            <div>
+              <div class="pay-name">UPI</div>
+              <div class="pay-desc">Free delivery on all UPI orders</div>
+            </div>
+            <div class="pay-icon">⚡</div>
+          </div>
+
+          <div class="pay-row">
+            <div>
+              <div class="pay-name">Bank Transfer</div>
+              <div class="pay-desc">NEFT / IMPS / direct transfer</div>
+            </div>
+            <div class="pay-icon">🏦</div>
+          </div>
+
+          <div class="pay-row">
+            <div>
+              <div class="pay-name">Cash on Delivery</div>
+              <div class="pay-desc">₹99 delivery charge applies</div>
+            </div>
+            <div class="pay-icon">💵</div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- 7. Product Availability -->
+      <div class="co-card" id="section-7">
+        <div class="co-card-head">
+          <div class="co-card-num">7</div>
+          <span class="co-card-title">Product Availability</span>
+        </div>
+        <div class="co-card-body">
+          <p class="policy-text">In rare situations where a product becomes unavailable after ordering, we may offer:</p>
+          <ul class="policy-list">
+            <li>A full refund, or</li>
+            <li>A replacement product once it is restocked.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 8. Contact -->
+      <div class="co-card" id="section-8">
+        <div class="co-card-head">
+          <div class="co-card-num">8</div>
+          <span class="co-card-title">Contact</span>
+        </div>
+        <div class="co-card-body">
+          <p class="policy-text">If you have any questions regarding these Terms, contact us:</p>
+          <ul class="policy-list" style="margin-top:14px">
+            <li>Email: <strong>hoodlabclothing@gmail.com</strong></li>
+            <li>Phone: <strong>+91 98765 43210</strong></li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ─── RIGHT: SIDEBAR ─── -->
+    <div class="co-summary">
+      <div class="co-summary-head">
+        <div class="co-summary-title">On this page</div>
+      </div>
+
+      <div class="toc-list">
+        <a class="toc-item active" onclick="goTo('section-1',this)">
+          <div class="toc-num">1</div>Products
+        </a>
+        <a class="toc-item" onclick="goTo('section-2',this)">
+          <div class="toc-num">2</div>Orders
+        </a>
+        <a class="toc-item" onclick="goTo('section-3',this)">
+          <div class="toc-num">3</div>Cancellation
+        </a>
+        <a class="toc-item" onclick="goTo('section-4',this)">
+          <div class="toc-num">4</div>Returns &amp; Refunds
+        </a>
+        <a class="toc-item" onclick="goTo('section-5',this)">
+          <div class="toc-num">5</div>Shipping
+        </a>
+        <a class="toc-item" onclick="goTo('section-6',this)">
+          <div class="toc-num">6</div>Payment Methods
+        </a>
+        <a class="toc-item" onclick="goTo('section-7',this)">
+          <div class="toc-num">7</div>Availability
+        </a>
+        <a class="toc-item" onclick="goTo('section-8',this)">
+          <div class="toc-num">8</div>Contact
+        </a>
+      </div>
+
+      <a href="mailto:hoodlabclothing@gmail.com" class="co-item">
+        <div class="co-item-icon">
+          <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </div>
+        <div>
+          <div class="co-item-label">Questions?</div>
+          <div class="co-item-val">Email us directly</div>
+        </div>
+      </a>
+
+      <div class="trust-strip">
+        <div class="trust-item">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span>Fair<br>Policy</span>
+        </div>
+        <div class="trust-item">
+          <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.5 15a9 9 0 1 1-2.3-5.2L23 10"/></svg>
+          <span>Easy<br>Returns</span>
+        </div>
+        <div class="trust-item">
+          <svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 5v4h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          <span>India<br>Shipping</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function goTo(id, el) {
+  document.getElementById(id).scrollIntoView({ behavior: "smooth", block: "start" });
+  document.querySelectorAll(".toc-item").forEach(t => t.classList.remove("active"));
+  el.classList.add("active");
+}
+
+/* highlight active section on scroll */
+const sections = document.querySelectorAll("[id^='section-']");
+const tocItems  = document.querySelectorAll(".toc-item");
+
+window.addEventListener("scroll", () => {
+  let current = "";
+  sections.forEach(s => {
+    if (window.scrollY >= s.offsetTop - 120) current = s.id;
+  });
+  tocItems.forEach(el => {
+    const match = el.getAttribute("onclick")?.includes(current);
+    el.classList.toggle("active", !!match);
+  });
+});
+</script>
+
+{% endblock %}

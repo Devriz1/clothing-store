@@ -1,0 +1,50 @@
+<h1>My Orders</h1>
+
+{% for order in orders %}
+<p><strong>Payment Method:</strong> {{ order.payment_method }}</p>
+
+<p><strong>Payment Status:</strong>
+    {% if order.payment_status == "Paid" %}
+        <span style="color:green; font-weight:bold;">
+            ✅ Paid
+        </span>
+    {% elif order.payment_status == "Processing" %}
+        <span style="color:orange; font-weight:bold;">
+            ⏳ Processing
+        </span>
+    {% else %}
+        <span style="color:red; font-weight:bold;">
+            ❌ Failed
+        </span>
+    {% endif %}
+</p>
+    <div style="border:1px solid #ccc; padding:10px; margin:10px;">
+        <h3>Order #{{ order.id }}</h3>
+        <p>Status: {{ order.status }}</p>
+        <p>Total: ₹ {{ order.total_amount }}</p>
+        <p>Date: {{ order.created_at }}</p>
+
+        <h4>Items:</h4>
+        <ul>
+            {% for item in order.items.all %}
+                <li>
+                    {{ item.product.name }} -
+                    {{ item.quantity }} × ₹{{ item.price }}
+                </li>
+            {% endfor %}
+        </ul>
+        {% if order.status != "Cancelled" %}
+    <a href="{% url 'orders:cancel_order' order.id %}">
+        <button style="background:red; color:white; padding:5px 10px;">
+            Cancel Order
+        </button>
+    </a>
+{% else %}
+    <span style="color:red; font-weight:bold;">
+        ❌ Cancelled
+    </span>
+{% endif %}
+    </div>
+{% empty %}
+    <p>You have no orders yet.</p>
+{% endfor %}

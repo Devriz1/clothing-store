@@ -1,0 +1,689 @@
+{% extends "base.html" %}
+
+{% block title %}Home | HOODLAB{% endblock %}
+
+{% block content %}
+
+<style>
+:root {
+  --ink: #0c0c0e;
+  --ink-soft: #3d3d44;
+  --muted: #9ca3af;
+  --border: #e8e8ea;
+  --surface: #f7f7f8;
+  --surface-2: #f0f0f2;
+  --white: #ffffff;
+  --font-body: "DM Sans", sans-serif;
+  --font-display: "Syne", sans-serif;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ─── TICKER ─── */
+.ticker {
+  overflow: hidden;
+  background: var(--ink);
+  padding: 11px 0;
+  white-space: nowrap;
+}
+
+.ticker-track {
+  display: inline-flex;
+  animation: ticker 30s linear infinite;
+}
+
+.ticker-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 26px;
+  padding: 0 26px;
+  font-family: var(--font-display);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.8);
+  flex-shrink: 0;
+}
+
+.ticker-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.25);
+  flex-shrink: 0;
+}
+
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* ─── HERO ─── */
+.hero {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 72px 20px 80px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.hero-left { animation: fadeUp 0.65s var(--ease-out) both; }
+
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 5px 14px 5px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 26px;
+}
+
+.hero-eyebrow-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #22c55e;
+  animation: blink 2s ease infinite;
+}
+
+@keyframes blink {
+  0%,100% { opacity:1; transform:scale(1); }
+  50%      { opacity:.5; transform:scale(.8); }
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(50px, 5.5vw, 80px);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -3px;
+  color: var(--ink);
+  margin-bottom: 24px;
+}
+
+.hero-title .italic  { display:block; font-style:italic; color:var(--ink-soft); }
+.hero-title .outline { display:block; -webkit-text-stroke:1.5px var(--ink); color:transparent; }
+
+.hero-body {
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.7;
+  max-width: 360px;
+  margin-bottom: 36px;
+}
+
+.hero-cta-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 44px;
+}
+
+.btn-dark {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 22px;
+  background: var(--ink);
+  color: #fff;
+  text-decoration: none;
+  border-radius: 10px;
+  font-size: 13.5px;
+  font-weight: 600;
+  font-family: var(--font-body);
+  transition: background .18s, transform .15s;
+}
+.btn-dark:hover { background:#1e1e24; transform:translateY(-1px); }
+.btn-dark svg { width:14px; height:14px; transition:transform .18s; }
+.btn-dark:hover svg { transform:translateX(3px); }
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  padding: 12px 20px;
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--border);
+  text-decoration: none;
+  border-radius: 10px;
+  font-size: 13.5px;
+  font-weight: 500;
+  font-family: var(--font-body);
+  transition: border-color .18s, background .18s;
+}
+.btn-outline:hover { border-color:var(--ink); background:var(--surface); }
+
+.hero-proof {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.proof-avatars { display:flex; }
+.proof-avatar {
+  width:32px; height:32px; border-radius:50%;
+  border:2px solid var(--white);
+  background:var(--surface-2);
+  display:flex; align-items:center; justify-content:center;
+  font-size:12px; color:var(--muted);
+  margin-left:-8px;
+}
+.proof-avatar:first-child { margin-left:0; }
+.proof-text { font-size:12.5px; color:var(--muted); line-height:1.5; }
+.proof-text strong { color:var(--ink); font-weight:600; }
+
+/* Hero right cards */
+.hero-right {
+  animation: fadeUp 0.65s 0.15s var(--ease-out) both;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.hero-feat {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 22px;
+  transition: border-color .2s, transform .2s;
+}
+.hero-feat:hover { border-color:#c0c0c6; transform:translateY(-2px); }
+.hero-feat.wide { grid-column:1/-1; display:flex; align-items:center; justify-content:space-between; gap:20px; }
+
+.feat-icon  { font-size:24px; margin-bottom:10px; display:block; }
+.feat-title { font-family:var(--font-display); font-size:15px; font-weight:700; color:var(--ink); margin-bottom:4px; }
+.feat-desc  { font-size:12.5px; color:var(--muted); line-height:1.5; }
+.feat-tag   { background:var(--ink); color:#fff; font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:4px 10px; border-radius:20px; flex-shrink:0; }
+
+/* ─── DIVIDER ─── */
+.section-divider { border:none; border-top:1px solid var(--border); margin:0; }
+
+/* ─── FILTER BAR ─── */
+.filter-bar {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 28px 20px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.filter-tabs { display:flex; gap:4px; flex-wrap:wrap; }
+
+.filter-tab {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: all .18s;
+  text-decoration: none;
+  display: inline-block;
+}
+.filter-tab:hover { background:var(--surface); color:var(--ink); }
+.filter-tab.active { background:var(--ink); color:#fff; border-color:var(--ink); }
+
+.sort-select {
+  padding: 8px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 13px;
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: var(--white);
+  cursor: pointer;
+  outline: none;
+  transition: border-color .18s;
+}
+.sort-select:focus { border-color:var(--ink); }
+
+/* ─── PRODUCTS SECTION ─── */
+.home-products {
+  max-width: 1200px;
+  margin: 32px auto 80px;
+  padding: 0 20px;
+}
+
+.section-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+
+.section-title { font-family:var(--font-display); font-size:20px; font-weight:800; letter-spacing:-.5px; color:var(--ink); }
+.section-meta  { font-size:12.5px; color:var(--muted); }
+
+/* ─── PRODUCT GRID ─── */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+/* ─── PRODUCT CARD ─── */
+.product-card {
+  display: flex;
+  flex-direction: column;
+  animation: fadeUp 0.5s var(--ease-out) both;
+}
+.product-card:nth-child(1){animation-delay:.05s}
+.product-card:nth-child(2){animation-delay:.1s}
+.product-card:nth-child(3){animation-delay:.15s}
+.product-card:nth-child(4){animation-delay:.2s}
+.product-card:nth-child(5){animation-delay:.25s}
+.product-card:nth-child(6){animation-delay:.3s}
+.product-card:nth-child(7){animation-delay:.35s}
+.product-card:nth-child(8){animation-delay:.4s}
+
+.image-box {
+  display: block;
+  text-decoration: none;
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--surface);
+  aspect-ratio: 3 / 4;
+}
+
+.image-box img {
+  width:100%; height:100%; object-fit:cover;
+  transition: transform .55s var(--ease-out);
+  display: block;
+}
+.product-card:hover .image-box img { transform:scale(1.06); }
+
+.card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(12,12,14,.45) 0%, transparent 55%);
+  opacity: 0;
+  transition: opacity .3s;
+  display: flex;
+  align-items: flex-end;
+  padding: 14px;
+}
+.product-card:hover .card-overlay { opacity:1; }
+
+.card-quick-add {
+  width:100%;
+  padding: 11px;
+  background: rgba(255,255,255,.93);
+  border: none;
+  border-radius: 8px;
+  font-size: 12.5px;
+  font-weight: 600;
+  font-family: var(--font-body);
+  color: var(--ink);
+  cursor: pointer;
+  transition: background .15s;
+  backdrop-filter: blur(4px);
+}
+.card-quick-add:hover { background:#fff; }
+
+.card-badges {
+  position: absolute;
+  top: 12px; left: 12px;
+  display: flex;
+  gap: 6px;
+}
+
+.card-badge {
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: .8px;
+  text-transform: uppercase;
+  padding: 4px 9px;
+  border-radius: 20px;
+}
+.badge-new { background:var(--ink); color:#fff; }
+.badge-hot { background:#ef4444; color:#fff; }
+
+.card-wish {
+  position: absolute;
+  top: 10px; right: 10px;
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  background: rgba(255,255,255,.9);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity .2s, background .15s;
+  backdrop-filter: blur(4px);
+}
+.product-card:hover .card-wish { opacity:1; }
+.card-wish:hover { background:#fff; }
+.card-wish svg { width:15px; height:15px; stroke:var(--ink); fill:none; stroke-width:2; }
+
+.image-placeholder {
+  width:100%; height:100%;
+  display:flex; align-items:center; justify-content:center;
+}
+.image-placeholder svg { width:36px; height:36px; color:var(--border); stroke:currentColor; }
+
+.product-info { margin-top:12px; display:flex; flex-direction:column; gap:3px; }
+
+.product-category {
+  font-size: 10.5px; font-weight:600;
+  letter-spacing:1px; text-transform:uppercase;
+  color:var(--muted);
+}
+
+.product-name {
+  font-size:14px; font-weight:600;
+  text-decoration:none; color:var(--ink);
+  line-height:1.4; transition:color .15s;
+}
+.product-name:hover { color:var(--ink-soft); }
+
+.product-bottom { display:flex; align-items:center; justify-content:space-between; margin-top:4px; }
+.product-price  { font-family:var(--font-display); font-size:14.5px; font-weight:700; color:var(--ink); }
+.product-stars  { color:#f59e0b; font-size:11px; letter-spacing:1px; }
+
+/* ─── EMPTY STATE ─── */
+.empty-state {
+  grid-column:1/-1;
+  text-align:center;
+  padding:100px 20px;
+}
+.empty-icon { font-size:50px; opacity:.2; margin-bottom:16px; }
+.empty-text { font-size:15px; color:var(--muted); }
+
+/* ─── FEATURES STRIP ─── */
+.features-strip { border-top:1px solid var(--border); background:var(--surface); }
+
+.features-inner {
+  max-width:1200px; margin:auto; padding:40px 20px;
+  display:grid; grid-template-columns:repeat(4,1fr); gap:32px;
+}
+
+.feature-item { display:flex; align-items:flex-start; gap:14px; }
+
+.feature-icon {
+  width:40px; height:40px; border-radius:10px;
+  background:var(--white); border:1px solid var(--border);
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0;
+}
+.feature-icon svg { width:18px; height:18px; stroke:var(--ink); fill:none; stroke-width:1.75; }
+.feature-title { font-size:13.5px; font-weight:600; color:var(--ink); margin-bottom:3px; }
+.feature-desc  { font-size:12px; color:var(--muted); line-height:1.5; }
+
+/* ─── ANIMATION ─── */
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(16px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width:1024px) {
+  .product-grid    { grid-template-columns:repeat(3,1fr); }
+  .features-inner  { grid-template-columns:repeat(2,1fr); }
+}
+@media (max-width:768px) {
+  .hero { grid-template-columns:1fr; padding-top:44px; padding-bottom:52px; gap:36px; }
+  .hero-right { display:none; }
+  .hero-title { letter-spacing:-2px; }
+  .product-grid { grid-template-columns:repeat(2,1fr); gap:14px; }
+  .features-inner { grid-template-columns:1fr 1fr; }
+}
+@media (max-width:480px) {
+  .product-grid   { gap:10px; }
+  .features-inner { grid-template-columns:1fr; }
+  .filter-bar     { flex-direction:column; align-items:flex-start; }
+}
+</style>
+
+<!-- ─── TICKER ─── -->
+<div class="ticker">
+  <div class="ticker-track">
+    <span class="ticker-item">Free Shipping Over ₹999 <span class="ticker-dot"></span></span>
+    <span class="ticker-item">New Drops Every Friday <span class="ticker-dot"></span></span>
+    <span class="ticker-item">Premium Streetwear <span class="ticker-dot"></span></span>
+    <span class="ticker-item">Easy Returns <span class="ticker-dot"></span></span>
+    <span class="ticker-item">COD Available <span class="ticker-dot"></span></span>
+    <span class="ticker-item">Members Get Early Access <span class="ticker-dot"></span></span>
+    <span class="ticker-item">Free Shipping Over ₹999 <span class="ticker-dot"></span></span>
+    <span class="ticker-item">New Drops Every Friday <span class="ticker-dot"></span></span>
+    <span class="ticker-item">Premium Streetwear <span class="ticker-dot"></span></span>
+    <span class="ticker-item">Easy Returns <span class="ticker-dot"></span></span>
+    <span class="ticker-item">COD Available <span class="ticker-dot"></span></span>
+    <span class="ticker-item">Members Get Early Access <span class="ticker-dot"></span></span>
+  </div>
+</div>
+
+<!-- ─── HERO ─── -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow">
+      <span class="hero-eyebrow-dot"></span>
+      Now Live — SS26 Collection
+    </div>
+
+    <h1 class="hero-title">
+      Dress
+      <span class="italic">different.</span>
+      <span class="outline">Always.</span>
+    </h1>
+
+    <p class="hero-body">
+      Premium streetwear built for those who set the tone. Every piece designed with intention — not trends.
+    </p>
+
+    <div class="hero-cta-row">
+      <a href="#drops" class="btn-dark">
+        Shop the Drop
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </a>
+      <a href="#" class="btn-outline">View Lookbook</a>
+    </div>
+
+    <div class="hero-proof">
+      <div class="proof-avatars">
+        <div class="proof-avatar">A</div>
+        <div class="proof-avatar">R</div>
+        <div class="proof-avatar">K</div>
+        <div class="proof-avatar">+</div>
+      </div>
+      <div class="proof-text">
+        <strong>2,400+ customers</strong><br>love HOODLAB this season
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="hero-feat">
+      <span class="feat-icon">🧵</span>
+      <div class="feat-title">Premium Fabrics</div>
+      <div class="feat-desc">Heavyweight cotton blends built to last.</div>
+    </div>
+    <div class="hero-feat">
+      <span class="feat-icon">🚚</span>
+      <div class="feat-title">Fast Delivery</div>
+      <div class="feat-desc">Ships within 24 hrs. Pan-India coverage.</div>
+    </div>
+    <div class="hero-feat wide">
+      <div>
+        <div class="feat-title">🔄 Hassle-Free Returns</div>
+        <div class="feat-desc">Return within 7 days, no questions asked.</div>
+      </div>
+      <span class="feat-tag">Policy</span>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ─── FILTER BAR ─── -->
+<div class="filter-bar">
+  <div class="filter-tabs">
+    <a href="#" class="filter-tab active" onclick="filterTab(event, this)">All</a>
+    {% for category in categories %}
+      <a href="{% url 'store:category_products' category.slug %}" class="filter-tab">{{ category.name }}</a>
+    {% endfor %}
+  </div>
+  <select class="sort-select" onchange="sortProducts(this.value)">
+    <option value="">Sort: Featured</option>
+    <option value="price-asc">Price: Low → High</option>
+    <option value="price-desc">Price: High → Low</option>
+    <option value="newest">Newest First</option>
+  </select>
+</div>
+
+<!-- ─── PRODUCT GRID ─── -->
+<section class="home-products" id="drops">
+  <div class="section-header">
+    <h2 class="section-title">Latest Drops</h2>
+    <span class="section-meta">{{ products|length }} styles available</span>
+  </div>
+
+  <div class="product-grid" id="productGrid">
+    {% for product in products %}
+    <div class="product-card" data-price="{{ product.display_price }}" data-name="{{ product.name }}">
+
+      <a href="{% url 'store:product_detail' product.slug %}" class="image-box">
+        <div class="card-badges">
+          {% if forloop.counter <= 3 %}<span class="card-badge badge-new">New</span>{% endif %}
+          {% if forloop.counter == 1 %}<span class="card-badge badge-hot">🔥 Hot</span>{% endif %}
+        </div>
+
+        <button class="card-wish" onclick="wishlistToggle(event,this)" aria-label="Wishlist">
+          <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </button>
+
+        {% if product.image %}
+          <img src="{{ product.image.url }}" alt="{{ product.name }}" loading="lazy">
+        {% else %}
+          <div class="image-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5">
+              <rect x="3" y="3" width="18" height="18" rx="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5"/>
+              <polyline points="21 15 16 10 5 21"/>
+            </svg>
+          </div>
+        {% endif %}
+
+        <div class="card-overlay">
+          <button class="card-quick-add">Quick Add</button>
+        </div>
+      </a>
+
+      <div class="product-info">
+        {% if product.category %}<span class="product-category">{{ product.category }}</span>{% endif %}
+        <a href="{% url 'store:product_detail' product.slug %}" class="product-name">{{ product.name }}</a>
+        <div class="product-bottom">
+          <span class="product-price">₹{{ product.display_price }}</span>
+          <span class="product-stars">★★★★★</span>
+        </div>
+      </div>
+
+    </div>
+    {% empty %}
+    <div class="empty-state">
+      <div class="empty-icon">🏷</div>
+      <p class="empty-text">No products right now. New drops coming soon.</p>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- ─── FEATURES STRIP ─── -->
+<div class="features-strip">
+  <div class="features-inner">
+    <div class="feature-item">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+      <div>
+        <div class="feature-title">Free Shipping</div>
+        <div class="feature-desc">On all orders above ₹999. Pan-India delivery.</div>
+      </div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg>
+      </div>
+      <div>
+        <div class="feature-title">Easy Returns</div>
+        <div class="feature-desc">7-day hassle-free return policy.</div>
+      </div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <div>
+        <div class="feature-title">Secure Payments</div>
+        <div class="feature-desc">UPI, cards, COD — all secured.</div>
+      </div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+      <div>
+        <div class="feature-title">Ships in 24 hrs</div>
+        <div class="feature-desc">Most orders dispatched next business day.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function filterTab(e, el) {
+  e.preventDefault();
+  document.querySelectorAll(".filter-tab").forEach(t => t.classList.remove("active"));
+  el.classList.add("active");
+}
+
+function sortProducts(val) {
+  const grid = document.getElementById("productGrid");
+  const cards = Array.from(grid.querySelectorAll(".product-card"));
+  if (!cards.length) return;
+  cards.sort((a, b) => {
+    const pa = parseFloat(a.dataset.price) || 0;
+    const pb = parseFloat(b.dataset.price) || 0;
+    if (val === "price-asc")  return pa - pb;
+    if (val === "price-desc") return pb - pa;
+    return 0;
+  });
+  cards.forEach(c => {
+    c.style.animation = "none";
+    grid.appendChild(c);
+    requestAnimationFrame(() => {
+      c.style.animation = "fadeUp 0.35s cubic-bezier(0.22,1,0.36,1) both";
+    });
+  });
+}
+
+function wishlistToggle(e, btn) {
+  e.preventDefault();
+  e.stopPropagation();
+  const svg = btn.querySelector("svg");
+  const active = svg.style.fill === "rgb(239, 68, 68)";
+  svg.style.fill   = active ? "none"    : "#ef4444";
+  svg.style.stroke = active ? "currentColor" : "#ef4444";
+}
+</script>
+
+{% endblock %}

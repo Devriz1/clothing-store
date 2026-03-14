@@ -1,0 +1,750 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }} | HOODLAB{% endblock %}
+
+{% block content %}
+
+<style>
+:root {
+  --ink: #0c0c0e;
+  --ink-soft: #3d3d44;
+  --muted: #9ca3af;
+  --border: #e8e8ea;
+  --surface: #f7f7f8;
+  --surface-2: #f0f0f2;
+  --white: #ffffff;
+  --green: #16a34a;
+  --green-bg: #f0fdf4;
+  --red: #ef4444;
+  --font-body: "DM Sans", sans-serif;
+  --font-display: "Syne", sans-serif;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ─── PAGE ─── */
+.product-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 48px 24px 100px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: start;
+}
+
+/* ─── GALLERY ─── */
+.gallery {
+  display: flex;
+  gap: 14px;
+  position: sticky;
+  top: 84px;
+}
+
+.thumbs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.thumb {
+  width: 66px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 10px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: border-color 0.18s, opacity 0.18s;
+  opacity: 0.55;
+  display: block;
+  background: var(--surface);
+}
+
+.thumb:hover { opacity: 0.85; }
+.thumb.active { border-color: var(--ink); opacity: 1; }
+
+.main-image-wrap {
+  flex: 1;
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--surface);
+  aspect-ratio: 4 / 5;
+  position: relative;
+}
+
+.main-image-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s var(--ease);
+}
+
+.main-image-wrap:hover img { transform: scale(1.03); }
+
+.main-image-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.main-image-placeholder svg {
+  width: 48px; height: 48px;
+  color: #d1d5db; stroke: currentColor;
+}
+
+/* ─── PRODUCT INFO ─── */
+.product-info {
+  animation: fadeUp 0.55s var(--ease) both;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Breadcrumb */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 18px;
+}
+
+.breadcrumb a {
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.breadcrumb a:hover { color: var(--ink); }
+.breadcrumb-sep { opacity: 0.4; }
+
+/* Title + badges */
+.product-title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.product-title {
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--ink);
+  line-height: 1.1;
+}
+
+.wish-btn {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: transparent;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.15s;
+  margin-top: 4px;
+}
+.wish-btn:hover { background: #fef2f2; border-color: #fecaca; }
+.wish-btn svg { width: 18px; height: 18px; stroke: var(--muted); fill: none; stroke-width: 2; transition: all 0.15s; }
+.wish-btn:hover svg { stroke: var(--red); }
+
+/* Rating row */
+.rating-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.stars { color: #f59e0b; font-size: 14px; letter-spacing: 1px; }
+
+.rating-text {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.rating-sep { color: var(--border); }
+
+/* Price */
+.price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.price-new {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.5px;
+}
+
+.price-old {
+  font-size: 16px;
+  color: var(--muted);
+  text-decoration: line-through;
+}
+
+.price-badge {
+  background: #fef2f2;
+  color: var(--red);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 20px;
+}
+
+/* Divider */
+.info-divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 20px 0;
+}
+
+/* Description */
+.product-desc {
+  font-size: 14.5px;
+  color: var(--ink-soft);
+  line-height: 1.72;
+  margin-bottom: 24px;
+}
+
+/* Section label */
+.option-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.option-label span {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink);
+}
+
+/* Colors */
+.color-options {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.color-swatch {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  transition: outline-color 0.18s, transform 0.15s;
+  position: relative;
+}
+.color-swatch:hover { transform: scale(1.1); }
+.color-swatch.active {
+  outline-color: var(--ink);
+}
+
+/* Sizes */
+.size-options {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.size-btn {
+  padding: 10px 18px;
+  border-radius: 9px;
+  border: 1.5px solid var(--border);
+  background: var(--white);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: all 0.18s;
+  position: relative;
+}
+.size-btn:hover { border-color: var(--ink); color: var(--ink); }
+.size-btn.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+.size-btn.soldout {
+  opacity: 0.38;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+
+/* Stock status */
+.stock-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 20px;
+  margin-bottom: 22px;
+}
+
+.stock-status.instock {
+  background: var(--green-bg);
+  color: var(--green);
+}
+
+.stock-status.instock::before {
+  content: "";
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--green);
+  animation: blink 1.8s ease infinite;
+}
+
+.stock-status.soldout {
+  background: #fef2f2;
+  color: var(--red);
+}
+
+.stock-status.soldout::before {
+  content: "";
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--red);
+}
+
+.stock-status.choose {
+  background: var(--surface);
+  color: var(--muted);
+}
+
+@keyframes blink {
+  0%,100% { opacity:1; }
+  50%      { opacity:0.4; }
+}
+
+/* CTA buttons */
+.btn-add {
+  width: 100%;
+  padding: 16px;
+  background: var(--ink);
+  color: #fff;
+  border: none;
+  border-radius: 11px;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: var(--font-body);
+  cursor: pointer;
+  margin-bottom: 10px;
+  transition: background 0.18s, transform 0.15s, opacity 0.18s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+}
+.btn-add:not(:disabled):hover { background: #1e1e24; transform: translateY(-1px); }
+.btn-add:disabled { opacity: 0.38; cursor: not-allowed; transform: none; }
+.btn-add svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+.btn-buy {
+  width: 100%;
+  padding: 15px;
+  background: var(--white);
+  color: var(--ink);
+  border: 1.5px solid var(--border);
+  border-radius: 11px;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: var(--font-body);
+  cursor: pointer;
+  margin-bottom: 20px;
+  transition: border-color 0.18s, background 0.18s, opacity 0.18s;
+}
+.btn-buy:not(:disabled):hover { border-color: var(--ink); background: var(--surface); }
+.btn-buy:disabled { opacity: 0.38; cursor: not-allowed; }
+
+/* Delivery info */
+.delivery-row {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.delivery-item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 12px;
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+
+.delivery-item svg {
+  width: 16px; height: 16px;
+  stroke: var(--muted); fill: none; stroke-width: 1.75;
+  flex-shrink: 0;
+}
+
+/* Accordion details */
+.accordion {
+  border-top: 1px solid var(--border);
+}
+
+.accordion-item {
+  border-bottom: 1px solid var(--border);
+}
+
+.accordion-trigger {
+  width: 100%;
+  padding: 16px 0;
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink);
+  cursor: pointer;
+  font-family: var(--font-body);
+  text-align: left;
+}
+
+.accordion-trigger svg {
+  width: 16px; height: 16px;
+  stroke: var(--muted); fill: none; stroke-width: 2;
+  transition: transform 0.25s;
+}
+
+.accordion-trigger.open svg { transform: rotate(180deg); }
+
+.accordion-body {
+  display: none;
+  padding-bottom: 16px;
+  font-size: 13.5px;
+  color: var(--ink-soft);
+  line-height: 1.7;
+}
+.accordion-body.open { display: block; }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 900px) {
+  .product-page {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding: 28px 16px 80px;
+  }
+
+  .gallery { position: relative; top: 0; }
+  .thumbs { flex-direction: row; }
+  .thumb { width: 60px; height: 72px; }
+}
+
+@media (max-width: 480px) {
+  .product-title { font-size: 24px; }
+  .delivery-row { flex-direction: column; }
+}
+</style>
+
+<div class="product-page">
+
+  <!-- ─── GALLERY ─── -->
+  <div class="gallery">
+    <div class="thumbs">
+      <img src="{{ product.image.url }}" class="thumb active" onclick="switchImage(this)">
+      {% for img in product.images.all %}
+        <img src="{{ img.image.url }}" class="thumb" onclick="switchImage(this)">
+      {% endfor %}
+    </div>
+
+    <div class="main-image-wrap">
+      <img id="mainImage" src="{{ product.image.url }}" alt="{{ product.name }}">
+    </div>
+  </div>
+
+  <!-- ─── PRODUCT INFO ─── -->
+  <div class="product-info">
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+      <a href="{% url 'store:home' %}">Home</a>
+      <span class="breadcrumb-sep">›</span>
+      {% if product.category %}
+        <a href="{% url 'store:category_products' product.category.slug %}">{{ product.category }}</a>
+        <span class="breadcrumb-sep">›</span>
+      {% endif %}
+      <span>{{ product.name }}</span>
+    </div>
+
+    <!-- Title + Wishlist -->
+    <div class="product-title-row">
+      <h1 class="product-title">{{ product.name }}</h1>
+      <button class="wish-btn" onclick="toggleWish(this)" aria-label="Wishlist">
+        <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      </button>
+    </div>
+
+    <!-- Rating -->
+    <div class="rating-row">
+      <span class="stars">★★★★★</span>
+      <span class="rating-text">4.9</span>
+      <span class="rating-sep">·</span>
+      <span class="rating-text">128 reviews</span>
+    </div>
+
+    <!-- Price -->
+    <div class="price-row">
+      <span class="price-new" id="newPrice">₹{{ product.variants.first.price }}</span>
+      <span class="price-old" id="oldPrice"
+        style="{% if not product.variants.first.old_price %}display:none{% endif %}">
+        {% if product.variants.first.old_price %}₹{{ product.variants.first.old_price }}{% endif %}
+      </span>
+      <span class="price-badge" id="discountBadge" style="display:none"></span>
+    </div>
+
+    <hr class="info-divider">
+
+    <!-- Description -->
+    <p class="product-desc">{{ product.description }}</p>
+
+    <!-- Color Selector -->
+    <div class="option-label">
+      Color <span id="selectedColorLabel">—</span>
+    </div>
+    <div class="color-options">
+      {% for color in colors %}
+        <div class="color-swatch"
+             data-color="{{ color }}"
+             style="background: {{ color }};"
+             title="{{ color }}"
+             onclick="selectColor(this)">
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- Size Selector -->
+    <div class="option-label">
+      Size <span id="selectedSizeLabel">—</span>
+    </div>
+    <div class="size-options">
+      {% for size in sizes %}
+        <button class="size-btn" data-size="{{ size }}" onclick="selectSize(this)">{{ size }}</button>
+      {% endfor %}
+    </div>
+
+    <!-- Stock Status -->
+    <div id="stockStatus" class="stock-status choose">Select color & size</div>
+
+    <!-- Add to Cart -->
+    <form method="POST" action="{% url 'cart:add_to_cart' %}">
+      {% csrf_token %}
+      <input type="hidden" name="variant_id" id="variantId">
+      <button type="submit" class="btn-add" id="addCartBtn" disabled>
+        <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        Add to Cart
+      </button>
+    </form>
+
+    <!-- Buy Now -->
+    <form method="GET" action="{% url 'orders:checkout' %}">
+      {% csrf_token %}
+      <input type="hidden" name="variant_id" id="buyVariantId">
+      <button type="submit" class="btn-buy" id="buyNowBtn" disabled>Buy it Now</button>
+    </form>
+
+    <!-- Delivery strip -->
+    <div class="delivery-row">
+      <div class="delivery-item">
+        <svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        Free shipping over ₹999
+      </div>
+      <div class="delivery-item">
+        <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg>
+        7-day easy returns
+      </div>
+      <div class="delivery-item">
+        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Secure checkout
+      </div>
+    </div>
+
+    <!-- Accordion -->
+    <div class="accordion">
+      <div class="accordion-item">
+        <button class="accordion-trigger" onclick="toggleAccordion(this)">
+          Product Details
+          <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-body">
+          Premium heavyweight cotton blend, pre-shrunk, relaxed fit. Designed and crafted for longevity. Each piece is garment-dyed for a rich, lived-in finish.
+        </div>
+      </div>
+      <div class="accordion-item">
+        <button class="accordion-trigger" onclick="toggleAccordion(this)">
+          Size Guide
+          <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-body">
+          XS: 34–36" · S: 36–38" · M: 38–40" · L: 40–42" · XL: 42–44" · XXL: 44–46"<br>
+          When in doubt, size up for an oversized look.
+        </div>
+      </div>
+      <div class="accordion-item">
+        <button class="accordion-trigger" onclick="toggleAccordion(this)">
+          Shipping & Returns
+          <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-body">
+          Ships within 24 hours. Pan-India delivery in 3–5 business days. Free returns within 7 days of delivery — no questions asked.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+/* ─── IMAGE GALLERY ─── */
+function switchImage(thumb) {
+  document.getElementById("mainImage").src = thumb.src;
+  document.querySelectorAll(".thumb").forEach(t => t.classList.remove("active"));
+  thumb.classList.add("active");
+}
+
+/* ─── VARIANTS DATA ─── */
+const variants = [
+  {% for v in product.variants.all %}
+  {
+    id: "{{ v.id }}",
+    color: "{{ v.color }}",
+    size: "{{ v.size }}",
+    stock: {{ v.stock }},
+    price: "{{ v.price }}",
+    old_price: "{{ v.old_price|default:'' }}"
+  },
+  {% endfor %}
+];
+
+let selectedColor = null;
+let selectedSize = null;
+
+/* ─── COLOR SELECT ─── */
+function selectColor(el) {
+  document.querySelectorAll(".color-swatch").forEach(c => c.classList.remove("active"));
+  el.classList.add("active");
+  selectedColor = el.dataset.color;
+  document.getElementById("selectedColorLabel").textContent = selectedColor;
+  updateVariant();
+}
+
+/* ─── SIZE SELECT ─── */
+function selectSize(el) {
+  if (el.classList.contains("soldout")) return;
+  document.querySelectorAll(".size-btn").forEach(s => s.classList.remove("active"));
+  el.classList.add("active");
+  selectedSize = el.dataset.size;
+  document.getElementById("selectedSizeLabel").textContent = selectedSize;
+  updateVariant();
+}
+
+/* ─── UPDATE VARIANT ─── */
+function updateVariant() {
+  const addBtn  = document.getElementById("addCartBtn");
+  const buyBtn  = document.getElementById("buyNowBtn");
+  const stock   = document.getElementById("stockStatus");
+  const newPrice = document.getElementById("newPrice");
+  const oldPrice = document.getElementById("oldPrice");
+  const discBadge = document.getElementById("discountBadge");
+
+  if (!selectedColor || !selectedSize) {
+    stock.className = "stock-status choose";
+    stock.textContent = "Select color & size";
+    return;
+  }
+
+  const found = variants.find(v => v.color === selectedColor && v.size === selectedSize);
+
+  if (found) {
+    document.getElementById("variantId").value    = found.id;
+    document.getElementById("buyVariantId").value = found.id;
+
+    newPrice.textContent = "₹" + found.price;
+
+    if (found.old_price) {
+      oldPrice.textContent = "₹" + found.old_price;
+      oldPrice.style.display = "inline";
+      // Calculate discount %
+      const pct = Math.round((1 - parseFloat(found.price) / parseFloat(found.old_price)) * 100);
+      if (pct > 0) {
+        discBadge.textContent = pct + "% off";
+        discBadge.style.display = "inline";
+      }
+    } else {
+      oldPrice.style.display = "none";
+      discBadge.style.display = "none";
+    }
+
+    if (found.stock > 0) {
+      stock.className = "stock-status instock";
+      stock.textContent = found.stock <= 5 ? `Only ${found.stock} left!` : "In Stock";
+      addBtn.disabled = false;
+      buyBtn.disabled = false;
+    } else {
+      stock.className = "stock-status soldout";
+      stock.textContent = "Sold Out";
+      addBtn.disabled = true;
+      buyBtn.disabled = true;
+    }
+  } else {
+    stock.className = "stock-status soldout";
+    stock.textContent = "Combination unavailable";
+    addBtn.disabled = true;
+    buyBtn.disabled = true;
+    document.getElementById("variantId").value = "";
+  }
+}
+
+/* ─── WISHLIST ─── */
+function toggleWish(btn) {
+  const svg = btn.querySelector("svg");
+  const on = svg.style.fill === "rgb(239, 68, 68)";
+  svg.style.fill   = on ? "none"    : "#ef4444";
+  svg.style.stroke = on ? "var(--muted)" : "#ef4444";
+  btn.style.background = on ? "" : "#fef2f2";
+  btn.style.borderColor = on ? "" : "#fecaca";
+}
+
+/* ─── ACCORDION ─── */
+function toggleAccordion(trigger) {
+  const body = trigger.nextElementSibling;
+  const isOpen = body.classList.contains("open");
+  document.querySelectorAll(".accordion-body").forEach(b => b.classList.remove("open"));
+  document.querySelectorAll(".accordion-trigger").forEach(t => t.classList.remove("open"));
+  if (!isOpen) {
+    body.classList.add("open");
+    trigger.classList.add("open");
+  }
+}
+</script>
+
+{% endblock %}
