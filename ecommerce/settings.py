@@ -13,6 +13,8 @@ import os
 import cloudinary
 from pathlib import Path
 from django.contrib.messages import constants as messages
+from dotenv import load_dotenv
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,25 +24,28 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-vxo2194c=8b_nejc6x7k5r-#qp_!4=u!db&h&8l4vy0tqfww56'
+#SECRET_KEY = 'django-insecure-vxo2194c=8b_nejc6x7k5r-#qp_!4=u!db&h&8l4vy0tqfww56'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
 
 CSRF_TRUSTED_ORIGINS = [
     "https://*.ngrok-free.app",
     "http://*.ngrok-free.app",
+    "https://your-app.onrender.com",
 ]
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-#cloudinary.config(
- #   cloud_name = "dkl6ry5xo",
- #   api_key = "393959599517767",
- #   api_secret = "PIDwWQY37_-8zOuR5C9mGKmdrn8",
-#)
+
 
 SECRET_KEY = os.environ.get('SECRET_KEY')
+
+if not SECRET_KEY:
+    if DEBUG:
+        SECRET_KEY = "dev-secret-key"
+    else:
+        raise Exception("SECRET_KEY not set in production!")
 
 cloudinary.config(
     cloud_name = os.environ.get('CLOUDINARY_CLOUD_NAME'),
@@ -48,10 +53,13 @@ cloudinary.config(
     api_secret = os.environ.get('CLOUDINARY_API_SECRET'),
 )
 
+if not os.environ.get('CLOUDINARY_CLOUD_NAME'):
+    print("⚠️ Cloudinary not configured")
+
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 # Application definition
-CSRF_COOKIE_SECURE = False
-SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = not DEBUG
+SESSION_COOKIE_SECURE = not DEBUG
 INSTALLED_APPS = [
     'jazzmin',
     'django.contrib.admin',
