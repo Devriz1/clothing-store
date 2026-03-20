@@ -1,0 +1,419 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Pay for Order #HL-{{ order.id }} | HOODLAB{% endblock %}
+
+{% block content %}
+
+<style>
+:root {
+  --bg: #f4f5f7;
+  --green: #16a34a; --green-bg: #f0fdf4; --green-border: rgba(22,163,74,.2);
+  --orange: #f97316; --orange-bg: #fff7ed;
+}
+body { background: var(--bg); }
+
+/* ─── PAGE ─── */
+.pay-page {
+  min-height: calc(100vh - 64px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 40px 20px 80px;
+}
+.pay-wrap { width: 100%; max-width: 480px; }
+
+/* ─── CARD ─── */
+.pay-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 20px; overflow: hidden;
+  animation: cardRise .5s cubic-bezier(0.22,1,0.36,1) both;
+}
+@keyframes cardRise {
+  from { opacity:0; transform:translateY(20px) scale(.98); }
+  to   { opacity:1; transform:translateY(0) scale(1); }
+}
+
+/* ─── HERO ─── */
+.pay-hero {
+  background: var(--ink);
+  padding: 32px 28px 28px;
+  text-align: center; position: relative; overflow: hidden;
+}
+.pay-hero::before {
+  content:""; position:absolute; inset:0;
+  background-image: radial-gradient(circle, rgba(255,255,255,.06) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+.pay-hero-icon {
+  width: 64px; height: 64px; border-radius: 50%;
+  border: 2px solid rgba(255,255,255,.15);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 16px; position: relative; z-index: 1;
+  animation: ringPop .45s cubic-bezier(0.22,1,0.36,1) .2s both;
+}
+@keyframes ringPop { from{opacity:0;transform:scale(.6)} to{opacity:1;transform:scale(1)} }
+.pay-hero-icon-inner {
+  width: 48px; height: 48px; border-radius: 50%;
+  background: rgba(255,255,255,.1);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+}
+
+.pay-label {
+  font-size: 11px; font-weight: 700; letter-spacing: 2.5px;
+  text-transform: uppercase; color: rgba(255,255,255,.4);
+  margin-bottom: 8px; position: relative; z-index: 1;
+  animation: fadeUp .4s cubic-bezier(0.22,1,0.36,1) .3s both;
+}
+.pay-amount {
+  font-family: var(--font-display);
+  font-size: 38px; font-weight: 800; color: #fff; letter-spacing: -.5px;
+  position: relative; z-index: 1;
+  animation: fadeUp .4s cubic-bezier(0.22,1,0.36,1) .4s both;
+}
+.pay-order-id {
+  font-size: 12.5px; color: rgba(255,255,255,.35);
+  margin-top: 6px; position: relative; z-index: 1;
+  animation: fadeUp .4s cubic-bezier(0.22,1,0.36,1) .45s both;
+}
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(8px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+/* ─── TIMER STRIP ─── */
+.pay-timer-strip {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 11px 24px; border-bottom: 1px solid var(--border);
+  background: var(--orange-bg);
+  animation: fadeUp .4s cubic-bezier(0.22,1,0.36,1) .5s both;
+}
+.pay-timer-strip svg { width: 14px; height: 14px; stroke: var(--orange); fill: none; stroke-width: 2; flex-shrink: 0; }
+.pay-timer-text { font-size: 12.5px; font-weight: 600; color: var(--orange); }
+.pay-timer-val  { font-family: var(--font-display); font-size: 13px; font-weight: 800; color: var(--orange); }
+
+/* ─── BODY ─── */
+.pay-body {
+  padding: 24px 28px;
+  animation: fadeUp .4s cubic-bezier(0.22,1,0.36,1) .55s both;
+}
+
+/* ─── QR SECTION (desktop) ─── */
+.qr-section {
+  display: flex; flex-direction: column; align-items: center;
+  border: 1px solid var(--border); border-radius: 14px;
+  padding: 20px; margin-bottom: 18px;
+}
+.qr-label {
+  font-size: 10.5px; font-weight: 700; letter-spacing: 1.2px;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 16px;
+}
+.qr-img-wrap {
+  padding: 12px; background: #fff;
+  border: 1px solid var(--border); border-radius: 12px;
+  margin-bottom: 14px;
+}
+.qr-img-wrap img { display: block; width: 200px; height: 200px; }
+
+.qr-hint {
+  font-size: 12.5px; color: var(--muted); text-align: center; line-height: 1.6;
+}
+.qr-hint strong { color: var(--ink); }
+
+/* ─── UPI APPS ROW (mobile) ─── */
+.upi-section { margin-bottom: 18px; }
+.upi-section-label {
+  font-size: 10.5px; font-weight: 700; letter-spacing: 1.2px;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 12px;
+}
+
+.upi-btn-main {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  width: 100%; padding: 15px;
+  background: var(--ink); color: #fff;
+  border: none; border-radius: 12px;
+  font-family: var(--font-display); font-size: 15px; font-weight: 700;
+  letter-spacing: .5px; cursor: pointer;
+  text-decoration: none; text-align: center;
+  transition: all .2s; margin-bottom: 10px;
+}
+.upi-btn-main:hover { background: #1e1e24; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,0,0,.15); }
+.upi-btn-main svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+/* UPI app quick links */
+.upi-apps {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+}
+.upi-app {
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+  padding: 12px 8px;
+  border: 1.5px solid var(--border); border-radius: 10px;
+  text-decoration: none; font-size: 11.5px; font-weight: 600;
+  color: var(--muted); transition: all .18s;
+}
+.upi-app:hover { border-color: #b0b0b8; color: var(--ink); background: var(--surface); }
+.upi-app span { font-size: 22px; }
+
+/* ─── DIVIDER ─── */
+.pay-divider {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 18px;
+}
+.pay-divider::before,
+.pay-divider::after {
+  content:""; flex:1; height:1px; background: var(--border);
+}
+.pay-divider span {
+  font-size: 11px; font-weight: 700; letter-spacing: 1px;
+  text-transform: uppercase; color: var(--muted); white-space: nowrap;
+}
+
+/* ─── CONFIRM FORM ─── */
+.confirm-section { }
+.confirm-label {
+  font-size: 10.5px; font-weight: 700; letter-spacing: 1.2px;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 12px;
+}
+
+/* Same as .btn-place from checkout */
+.btn-paid {
+  width: 100%; padding: 15px;
+  background: var(--green); color: #fff;
+  border: none; border-radius: 12px;
+  font-family: var(--font-display); font-size: 15px; font-weight: 700;
+  letter-spacing: .5px; cursor: pointer; transition: all .2s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.btn-paid:hover { background: #15803d; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(22,163,74,.3); }
+.btn-paid svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2.5; }
+.btn-paid.loading { opacity: .65; pointer-events: none; }
+
+/* ─── INFO ROWS (same as order success) ─── */
+.info-rows {
+  display: flex; flex-direction: column;
+  border: 1px solid var(--border); border-radius: 12px;
+  overflow: hidden; margin-bottom: 18px;
+}
+.info-row {
+  display: flex; align-items: center; gap: 14px;
+  padding: 13px 18px; border-bottom: 1px solid var(--border);
+}
+.info-row:last-child { border-bottom: none; }
+.info-icon {
+  width: 34px; height: 34px; border-radius: 8px;
+  background: var(--surface); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.info-icon svg { width: 15px; height: 15px; stroke: var(--muted); fill: none; stroke-width: 1.75; }
+.info-label { font-size: 10px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: var(--muted); margin-bottom: 1px; }
+.info-val   { font-size: 13.5px; font-weight: 600; color: var(--ink); }
+
+/* ─── TRUST STRIP (exact checkout copy) ─── */
+.trust-strip {
+  display: flex; border-top: 1px solid var(--border);
+  background: var(--surface);
+}
+.trust-item {
+  flex: 1; display: flex; flex-direction: column; align-items: center;
+  gap: 5px; text-align: center; padding: 14px 8px;
+  border-right: 1px solid var(--border);
+}
+.trust-item:last-child { border-right: none; }
+.trust-item svg { width: 16px; height: 16px; stroke: var(--muted); fill: none; stroke-width: 1.75; }
+.trust-item span { font-size: 10px; color: var(--muted); line-height: 1.4; }
+
+/* ─── BOTTOM NOTE ─── */
+.pay-note {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  margin-top: 16px; font-size: 12.5px; color: var(--muted);
+  animation: fadeUp .4s cubic-bezier(0.22,1,0.36,1) .7s both;
+}
+.pay-note svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; flex-shrink: 0; }
+
+@media (max-width: 480px) {
+  .pay-hero  { padding: 28px 20px 24px; }
+  .pay-body  { padding: 20px; }
+  .pay-amount { font-size: 32px; }
+  .upi-apps { grid-template-columns: repeat(3, 1fr); }
+}
+</style>
+
+<div class="pay-page">
+  <div class="pay-wrap">
+    <div class="pay-card">
+
+      <!-- HERO -->
+      <div class="pay-hero">
+        <div class="pay-hero-icon">
+          <div class="pay-hero-icon-inner">⚡</div>
+        </div>
+        <div class="pay-label">Complete Your Payment</div>
+        <div class="pay-amount">₹{{ order.total_amount }}</div>
+        <div class="pay-order-id">Order #HL-{{ order.id }}</div>
+      </div>
+
+      <!-- TIMER STRIP -->
+      <div class="pay-timer-strip">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span class="pay-timer-text">Complete payment within&nbsp;</span>
+        <span class="pay-timer-val" id="timerVal">15:00</span>
+      </div>
+
+      <div class="pay-body">
+
+        <!-- ORDER SUMMARY ROWS -->
+        <div class="info-rows">
+          <div class="info-row">
+            <div class="info-icon">
+              <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>
+            </div>
+            <div>
+              <div class="info-label">Order ID</div>
+              <div class="info-val">#HL-{{ order.id }}</div>
+            </div>
+          </div>
+          {% if order.city %}
+          <div class="info-row">
+            <div class="info-icon">
+              <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+            <div>
+              <div class="info-label">Delivering To</div>
+              <div class="info-val">{{ order.city }}, {{ order.postal_code }}</div>
+            </div>
+          </div>
+          {% endif %}
+          <div class="info-row">
+            <div class="info-icon">
+              <svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+            </div>
+            <div>
+              <div class="info-label">Amount to Pay</div>
+              <div class="info-val" style="color:var(--green);font-size:15px">₹{{ order.total_amount }}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MOBILE: UPI deep links -->
+        <div id="mobileSection" class="upi-section" style="display:none">
+          <div class="upi-section-label">Pay with UPI</div>
+          <a href="{{ upi_link }}" class="upi-btn-main">
+            <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+            Open UPI App
+          </a>
+          <div class="upi-apps">
+            <a href="{{ upi_link }}" class="upi-app">
+              <span>🔵</span>GPay
+            </a>
+            <a href="{{ upi_link }}" class="upi-app">
+              <span>🟣</span>PhonePe
+            </a>
+            <a href="{{ upi_link }}" class="upi-app">
+              <span>🟡</span>Paytm
+            </a>
+          </div>
+        </div>
+
+        <!-- DESKTOP: QR code -->
+        <div id="desktopSection" class="qr-section" style="display:none">
+          <div class="qr-label">Scan QR with any UPI App</div>
+          <div class="qr-img-wrap">
+            <img src="data:image/png;base64,{{ qr_code }}" alt="UPI QR Code">
+          </div>
+          <div class="qr-hint">
+            Open <strong>GPay, PhonePe, Paytm</strong> or any UPI app<br>and scan this code to pay
+          </div>
+        </div>
+
+        <div class="pay-divider"><span>After paying</span></div>
+
+        <!-- CONFIRM FORM -->
+        <div class="confirm-section">
+          <div class="confirm-label">Confirm your payment</div>
+          <form method="post" action="{% url 'orders:confirm_payment' order.id %}" onsubmit="handlePaid(event)">
+            {% csrf_token %}
+            <button type="submit" class="btn-paid" id="paidBtn">
+              <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+              I Have Paid
+            </button>
+          </form>
+        </div>
+
+      </div>
+
+      <!-- TRUST STRIP -->
+      <div class="trust-strip">
+        <div class="trust-item">
+          <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <span>Secure<br>Payment</span>
+        </div>
+        <div class="trust-item">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span>No Data<br>Stored</span>
+        </div>
+        <div class="trust-item">
+          <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.5 15a9 9 0 1 1-2.3-5.2L23 10"/></svg>
+          <span>Easy<br>Refunds</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="pay-note">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Only tap "I Have Paid" after your payment is complete
+    </div>
+
+  </div>
+</div>
+
+<script>
+/* ── MOBILE / DESKTOP DETECTION (same logic as original) ── */
+(function () {
+  const mobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  document.getElementById(mobile ? "mobileSection" : "desktopSection").style.display = mobile ? "block" : "flex";
+})();
+
+/* ── COUNTDOWN TIMER (15 min) ── */
+(function () {
+  let secs = 15 * 60;
+  const el = document.getElementById("timerVal");
+  const strip = document.querySelector(".pay-timer-strip");
+
+  const tick = setInterval(() => {
+    secs--;
+    if (secs <= 0) {
+      clearInterval(tick);
+      el.innerText = "00:00";
+      strip.style.background = "var(--red-bg, #fef2f2)";
+      strip.querySelectorAll("*").forEach(n => n.style.color = "#ef4444");
+      strip.querySelector("svg").style.stroke = "#ef4444";
+      return;
+    }
+    const m = String(Math.floor(secs / 60)).padStart(2, "0");
+    const s = String(secs % 60).padStart(2, "0");
+    el.innerText = `${m}:${s}`;
+
+    /* turn orange → red in last 2 min */
+    if (secs <= 120) {
+      strip.style.background = "#fef2f2";
+      strip.querySelectorAll(".pay-timer-text, .pay-timer-val").forEach(n => n.style.color = "#ef4444");
+      strip.querySelector("svg").style.stroke = "#ef4444";
+    }
+  }, 1000);
+})();
+
+/* ── SUBMIT LOADING STATE ── */
+function handlePaid(e) {
+  const btn = document.getElementById("paidBtn");
+  btn.classList.add("loading");
+  btn.innerHTML = `<svg viewBox="0 0 24 24" style="animation:spin .8s linear infinite;width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.5"><polyline points="23 4 23 10 17 10"/><path d="M20.5 15a9 9 0 1 1-2.3-5.2L23 10"/></svg> Verifying…`;
+}
+
+const s = document.createElement("style");
+s.innerText = "@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}";
+document.head.appendChild(s);
+</script>
+
+{% endblock %}

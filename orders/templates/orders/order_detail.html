@@ -16,295 +16,128 @@
 }
 body { background: var(--bg); }
 
-/* ─── WRAPPER ─── */
-.od-wrapper {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 40px 24px 80px;
-}
+.od-wrapper { max-width: 1100px; margin: 0 auto; padding: 40px 24px 80px; }
 
-/* ─── PAGE HEADER ─── */
-.od-topbar {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 28px;
-  flex-wrap: wrap;
-}
-
-.od-back {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-size: 13px; font-weight: 600; color: var(--muted);
-  text-decoration: none; margin-bottom: 10px;
-  transition: color .18s;
-}
+/* TOP BAR */
+.od-topbar { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 28px; flex-wrap: wrap; }
+.od-back { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--muted); text-decoration: none; margin-bottom: 10px; transition: color .18s; }
 .od-back:hover { color: var(--ink); }
 .od-back svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.5; }
+.od-title { font-family: var(--font-display); font-size: 26px; font-weight: 800; letter-spacing: -.5px; color: var(--ink); margin-bottom: 6px; }
+.od-meta { font-size: 13.5px; color: var(--muted); display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 
-.od-title-group {}
-.od-title {
-  font-family: var(--font-display);
-  font-size: 26px; font-weight: 800;
-  letter-spacing: -.5px; color: var(--ink);
-  margin-bottom: 6px;
-}
-.od-meta {
-  font-size: 13.5px; color: var(--muted);
-  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
-}
-
-.od-status-pill {
-  padding: 4px 12px; border-radius: 20px;
-  font-size: 11px; font-weight: 700; letter-spacing: .3px;
-}
+.od-status-pill { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: .3px; }
 .od-status-delivered  { background: var(--green-bg);  color: var(--green);  border: 1px solid rgba(22,163,74,.2); }
 .od-status-processing { background: var(--blue-bg);   color: var(--blue);   border: 1px solid rgba(59,130,246,.2); }
 .od-status-cancelled  { background: var(--red-bg);    color: var(--red);    border: 1px solid rgba(239,68,68,.2); }
 .od-status-shipped    { background: var(--purple-bg); color: var(--purple); border: 1px solid rgba(147,51,234,.2); }
 .od-status-default    { background: var(--surface-2); color: var(--muted);  border: 1px solid var(--border); }
 
-.btn-cancel {
-  padding: 10px 20px;
-  border: 1.5px solid var(--red-border);
-  border-radius: 9px; background: var(--red-bg);
-  color: var(--red); font-size: 13px; font-weight: 600;
-  font-family: var(--font-body); cursor: pointer; transition: all .18s;
-}
+/* Payment status pills */
+.pay-pill-paid     { background: var(--green-bg);  color: var(--green);  border: 1px solid rgba(22,163,74,.2); }
+.pay-pill-pending  { background: var(--orange-bg); color: var(--orange); border: 1px solid rgba(249,115,22,.2); }
+.pay-pill-failed   { background: var(--red-bg);    color: var(--red);    border: 1px solid rgba(239,68,68,.2); }
+.pay-pill-refunded { background: var(--purple-bg); color: var(--purple); border: 1px solid rgba(147,51,234,.2); }
+.pay-pill-default  { background: var(--surface-2); color: var(--muted);  border: 1px solid var(--border); }
+
+.btn-cancel { padding: 10px 20px; border: 1.5px solid var(--red-border); border-radius: 9px; background: var(--red-bg); color: var(--red); font-size: 13px; font-weight: 600; font-family: var(--font-body); cursor: pointer; transition: all .18s; }
 .btn-cancel:hover { background: var(--red); color: #fff; border-color: var(--red); }
 
-/* ─── GRID ─── */
-.od-grid {
-  display: grid;
-  grid-template-columns: 1fr 320px;
-  gap: 20px;
-  align-items: start;
-}
+/* GRID */
+.od-grid { display: grid; grid-template-columns: 1fr 320px; gap: 20px; align-items: start; }
 
-/* ─── CARD ─── */
-.od-card {
-  background: #fff;
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  overflow: hidden;
-  margin-bottom: 16px;
-}
+/* CARD */
+.od-card { background: #fff; border: 1px solid var(--border); border-radius: 16px; overflow: hidden; margin-bottom: 16px; }
 .od-card:last-child { margin-bottom: 0; }
-
-.od-card-head {
-  display: flex; align-items: center; gap: 10px;
-  padding: 17px 22px;
-  border-bottom: 1px solid var(--border);
-}
-.od-card-title {
-  font-family: var(--font-display);
-  font-size: 14px; font-weight: 700;
-}
+.od-card-head { display: flex; align-items: center; gap: 10px; padding: 17px 22px; border-bottom: 1px solid var(--border); }
+.od-card-title { font-family: var(--font-display); font-size: 14px; font-weight: 700; }
 .od-card-body { padding: 20px 22px; }
 
-/* ─── TRACKING STEPPER ─── */
-.cancelled-banner {
-  display: flex; align-items: center; gap: 10px;
-  padding: 14px 16px;
-  background: var(--red-bg); border: 1px solid var(--red-border);
-  border-radius: 10px; color: var(--red);
-  font-size: 14px; font-weight: 600;
-}
+/* TRACKING STEPPER */
+.cancelled-banner { display: flex; align-items: center; gap: 10px; padding: 14px 16px; background: var(--red-bg); border: 1px solid var(--red-border); border-radius: 10px; color: var(--red); font-size: 14px; font-weight: 600; }
 
-.track-stepper {
-  display: flex;
-  justify-content: space-between;
-  position: relative;
-  padding: 10px 0 6px;
-}
-
-/* Progress line behind steps */
-.track-stepper::before {
-  content: "";
-  position: absolute;
-  top: 27px; left: 18px;
-  width: calc(100% - 36px);
-  height: 3px;
-  background: var(--border);
-  border-radius: 2px;
-  z-index: 0;
-}
-
-.track-progress {
-  position: absolute;
-  top: 27px; left: 18px;
-  height: 3px;
-  background: var(--ink);
-  border-radius: 2px;
-  z-index: 1;
-  transition: width .4s var(--ease, cubic-bezier(0.22,1,0.36,1));
-}
-
-.track-step {
-  flex: 1; display: flex; flex-direction: column;
-  align-items: center; gap: 10px;
-  position: relative; z-index: 2;
-}
-
-.track-dot {
-  width: 36px; height: 36px; border-radius: 50%;
-  background: var(--surface-2); border: 2px solid var(--border);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 15px; transition: all .25s;
-  flex-shrink: 0;
-}
-
-.track-dot.done {
-  background: var(--ink); border-color: var(--ink);
-  box-shadow: 0 0 0 4px rgba(12,12,14,.08);
-}
-
+.track-stepper { display: flex; justify-content: space-between; position: relative; padding: 10px 0 6px; }
+.track-stepper::before { content: ""; position: absolute; top: 27px; left: 18px; width: calc(100% - 36px); height: 3px; background: var(--border); border-radius: 2px; z-index: 0; }
+.track-progress { position: absolute; top: 27px; left: 18px; height: 3px; background: var(--ink); border-radius: 2px; z-index: 1; transition: width .5s cubic-bezier(0.22,1,0.36,1); }
+.track-step { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 10px; position: relative; z-index: 2; }
+.track-dot { width: 36px; height: 36px; border-radius: 50%; background: var(--surface-2); border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; transition: all .25s; flex-shrink: 0; }
+.track-dot.done { background: var(--ink); border-color: var(--ink); box-shadow: 0 0 0 4px rgba(12,12,14,.08); }
 .track-dot.done svg { stroke: #fff; }
-
-.track-dot svg {
-  width: 16px; height: 16px;
-  stroke: var(--muted); fill: none; stroke-width: 2.2;
-}
-
-.track-label {
-  font-size: 11.5px; font-weight: 600; color: var(--muted);
-  text-align: center; white-space: nowrap;
-}
+.track-dot svg { width: 16px; height: 16px; stroke: var(--muted); fill: none; stroke-width: 2.2; }
+.track-label { font-size: 11.5px; font-weight: 600; color: var(--muted); text-align: center; white-space: nowrap; }
 .track-label.done { color: var(--ink); }
 
-/* ─── ORDER ITEMS ─── */
-.od-item {
-  display: flex; align-items: center; gap: 14px;
-  padding: 14px 0;
-  border-bottom: 1px solid var(--border);
+/* TRACKING ID ROW */
+.tracking-id-row {
+  margin-top: 18px; padding: 12px 14px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 9px;
+  display: flex; align-items: center; justify-content: space-between;
 }
+.tracking-id-label { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 3px; }
+.tracking-id-val   { font-family: monospace; font-size: 14px; font-weight: 700; letter-spacing: 1px; }
+.btn-copy { padding: 7px 14px; border: 1px solid var(--border); border-radius: 8px; background: #fff; font-size: 12px; font-weight: 600; font-family: var(--font-body); cursor: pointer; transition: all .15s; }
+.btn-copy:hover { background: var(--surface-2); }
+
+/* ORDER ITEMS */
+.od-item { display: flex; align-items: center; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--border); }
 .od-item:first-child { padding-top: 0; }
 .od-item:last-child  { padding-bottom: 0; border-bottom: none; }
-
-.od-item-img {
-  width: 54px; height: 66px; border-radius: 9px;
-  object-fit: cover; border: 1px solid var(--border); flex-shrink: 0;
-}
-.od-item-img-ph {
-  width: 54px; height: 66px; border-radius: 9px;
-  background: var(--surface-2); border: 1px solid var(--border); flex-shrink: 0;
-}
-
+.od-item-img    { width: 54px; height: 66px; border-radius: 9px; object-fit: cover; border: 1px solid var(--border); flex-shrink: 0; }
+.od-item-img-ph { width: 54px; height: 66px; border-radius: 9px; background: var(--surface-2); border: 1px solid var(--border); flex-shrink: 0; }
 .od-item-name { font-size: 14px; font-weight: 600; margin-bottom: 5px; }
-
 .od-item-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 4px; }
-.od-tag {
-  font-size: 11px; font-weight: 600; padding: 2px 8px;
-  border-radius: 6px; background: var(--surface-2);
-  color: var(--ink-soft); border: 1px solid var(--border);
-}
-
-.od-item-qty { font-size: 12.5px; color: var(--muted); }
+.od-tag { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--surface-2); color: var(--ink-soft); border: 1px solid var(--border); }
+.od-item-qty   { font-size: 12.5px; color: var(--muted); }
 .od-item-price { font-size: 14px; font-weight: 700; margin-left: auto; flex-shrink: 0; }
 
-/* ─── SUMMARY / RIGHT PANEL ─── */
-.od-summary-card {
-  background: #fff;
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  overflow: hidden;
-  position: sticky;
-  top: 84px;
-}
+.empty-items { text-align: center; padding: 40px 20px; }
+.empty-items-icon { font-size: 36px; opacity: .2; margin-bottom: 10px; }
+.empty-items-text { font-size: 13.5px; color: var(--muted); }
 
-.od-sum-head {
-  padding: 17px 22px;
-  border-bottom: 1px solid var(--border);
-}
+/* SUMMARY */
+.od-summary-card { background: #fff; border: 1px solid var(--border); border-radius: 16px; overflow: hidden; position: sticky; top: 84px; }
+.od-sum-head { padding: 17px 22px; border-bottom: 1px solid var(--border); }
 .od-sum-title { font-family: var(--font-display); font-size: 14px; font-weight: 700; }
-
 .od-sum-body { padding: 18px 22px; }
-
-.od-sum-row {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 6px 0; font-size: 14px; color: var(--ink-soft);
-}
+.od-sum-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; font-size: 14px; color: var(--ink-soft); }
 .od-sum-row.discount { color: var(--green); }
 .od-sum-divider { border: none; border-top: 1px solid var(--border); margin: 10px 0; }
-.od-sum-total {
-  display: flex; justify-content: space-between; align-items: baseline;
-  padding: 10px 0 2px;
-}
+.od-sum-total { display: flex; justify-content: space-between; align-items: baseline; padding: 10px 0 2px; }
 .od-sum-total-label { font-family: var(--font-display); font-size: 15px; font-weight: 700; }
 .od-sum-total-val   { font-family: var(--font-display); font-size: 22px; font-weight: 800; }
 
-/* ─── INFO BLOCK (address / payment) ─── */
-.od-info-block {
-  background: #fff;
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  overflow: hidden;
-  margin-top: 16px;
+/* PAYMENT STATUS ROW inside summary */
+.od-pay-status-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 0; border-top: 1px solid var(--border); margin-top: 4px;
 }
-.od-info-row {
-  padding: 16px 22px;
-  border-bottom: 1px solid var(--border);
-}
+.od-pay-status-label { font-size: 13px; color: var(--ink-soft); }
+.od-pay-status-pill  { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: .3px; }
+
+/* INFO BLOCK */
+.od-info-block { background: #fff; border: 1px solid var(--border); border-radius: 16px; overflow: hidden; margin-top: 16px; }
+.od-info-row { padding: 16px 22px; border-bottom: 1px solid var(--border); }
 .od-info-row:last-child { border-bottom: none; }
-.od-info-label {
-  font-size: 10px; font-weight: 700;
-  letter-spacing: 1.2px; text-transform: uppercase;
-  color: #c0c0c8; margin-bottom: 8px;
-}
+.od-info-label { font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: #c0c0c8; margin-bottom: 8px; }
 .od-info-text { font-size: 13.5px; color: var(--ink-soft); line-height: 1.7; }
 .od-info-name { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+.od-pay-pill { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 8px; background: var(--surface); border: 1px solid var(--border); font-size: 13px; font-weight: 600; color: var(--ink); }
 
-.od-pay-pill {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 6px 12px; border-radius: 8px;
-  background: var(--surface); border: 1px solid var(--border);
-  font-size: 13px; font-weight: 600; color: var(--ink);
-}
-
-/* ─── CANCEL MODAL ─── */
-.modal-overlay {
-  display: none; position: fixed; inset: 0;
-  background: rgba(0,0,0,.45); backdrop-filter: blur(6px);
-  justify-content: center; align-items: center; z-index: 2000;
-}
+/* CANCEL MODAL */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45); backdrop-filter: blur(6px); justify-content: center; align-items: center; z-index: 2000; }
 .modal-overlay.open { display: flex; }
-
-.modal-box {
-  background: #fff; border: 1px solid var(--border);
-  border-radius: 16px; padding: 30px; width: 380px; max-width: 92vw;
-  position: relative; animation: modalIn .22s cubic-bezier(0.22,1,0.36,1) both;
-}
-@keyframes modalIn { from { opacity:0; transform:scale(.96) translateY(8px); } to { opacity:1; transform:scale(1) translateY(0); } }
-
-.modal-icon {
-  width: 52px; height: 52px; border-radius: 50%;
-  background: var(--red-bg); border: 1px solid var(--red-border);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 22px; margin: 0 auto 16px;
-}
+.modal-box { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 30px; width: 380px; max-width: 92vw; position: relative; animation: modalIn .22s cubic-bezier(0.22,1,0.36,1) both; }
+@keyframes modalIn { from{opacity:0;transform:scale(.96) translateY(8px)} to{opacity:1;transform:scale(1) translateY(0)} }
+.modal-icon { width: 52px; height: 52px; border-radius: 50%; background: var(--red-bg); border: 1px solid var(--red-border); display: flex; align-items: center; justify-content: center; font-size: 22px; margin: 0 auto 16px; }
 .modal-title { font-family: var(--font-display); font-size: 18px; font-weight: 800; text-align: center; margin-bottom: 8px; }
 .modal-desc  { font-size: 13.5px; color: var(--muted); text-align: center; margin-bottom: 22px; line-height: 1.6; }
-
 .modal-actions { display: flex; gap: 10px; }
-.btn-modal-no {
-  flex: 1; padding: 12px;
-  border: 1px solid var(--border); border-radius: 9px;
-  background: var(--surface); color: var(--ink-soft);
-  font-size: 14px; font-weight: 600; font-family: var(--font-body);
-  cursor: pointer; transition: all .18s;
-}
+.btn-modal-no  { flex: 1; padding: 12px; border: 1px solid var(--border); border-radius: 9px; background: var(--surface); color: var(--ink-soft); font-size: 14px; font-weight: 600; font-family: var(--font-body); cursor: pointer; transition: all .18s; }
 .btn-modal-no:hover { background: var(--surface-2); }
-
-.btn-modal-yes {
-  flex: 1; padding: 12px;
-  border: none; border-radius: 9px;
-  background: var(--red); color: #fff;
-  font-size: 14px; font-weight: 600; font-family: var(--font-body);
-  cursor: pointer; transition: all .18s;
-}
+.btn-modal-yes { flex: 1; padding: 12px; border: none; border-radius: 9px; background: var(--red); color: #fff; font-size: 14px; font-weight: 600; font-family: var(--font-body); cursor: pointer; transition: all .18s; }
 .btn-modal-yes:hover { background: #dc2626; }
 
-/* ─── RESPONSIVE ─── */
+/* RESPONSIVE */
 @media (max-width: 860px) {
   .od-grid { grid-template-columns: 1fr; }
   .od-summary-card { position: relative; top: 0; }
@@ -319,9 +152,9 @@ body { background: var(--bg); }
 
 <div class="od-wrapper">
 
-  <!-- ─── TOP BAR ─── -->
+  <!-- TOP BAR -->
   <div class="od-topbar">
-    <div class="od-title-group">
+    <div>
       <a href="{% url 'accounts:profile' %}#orders" class="od-back">
         <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
         Back to Orders
@@ -348,10 +181,9 @@ body { background: var(--bg); }
     {% endif %}
   </div>
 
-  <!-- ─── GRID ─── -->
   <div class="od-grid">
 
-    <!-- LEFT -->
+    <!-- ── LEFT ── -->
     <div>
 
       <!-- TRACKING -->
@@ -368,16 +200,10 @@ body { background: var(--bg); }
               This order has been cancelled.
             </div>
           {% else %}
-
-            {% comment %}
-              Determine progress width based on status:
-              Placed=0%, Processing=33%, Shipped=66%, Delivered=100%
-            {% endcomment %}
-
-            <div class="track-stepper" id="trackStepper">
+            <div class="track-stepper">
               <div class="track-progress" id="trackProgress" style="width:0%"></div>
 
-              <!-- Step 1: Placed -->
+              <!-- Placed — always done -->
               <div class="track-step">
                 <div class="track-dot done">
                   <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
@@ -385,7 +211,7 @@ body { background: var(--bg); }
                 <span class="track-label done">Placed</span>
               </div>
 
-              <!-- Step 2: Processing -->
+              <!-- Processing -->
               <div class="track-step">
                 <div class="track-dot {% if order.status == 'Processing' or order.status == 'Shipped' or order.status == 'Delivered' %}done{% endif %}">
                   {% if order.status == 'Processing' or order.status == 'Shipped' or order.status == 'Delivered' %}
@@ -397,7 +223,7 @@ body { background: var(--bg); }
                 <span class="track-label {% if order.status == 'Processing' or order.status == 'Shipped' or order.status == 'Delivered' %}done{% endif %}">Processing</span>
               </div>
 
-              <!-- Step 3: Shipped -->
+              <!-- Shipped -->
               <div class="track-step">
                 <div class="track-dot {% if order.status == 'Shipped' or order.status == 'Delivered' %}done{% endif %}">
                   {% if order.status == 'Shipped' or order.status == 'Delivered' %}
@@ -409,7 +235,7 @@ body { background: var(--bg); }
                 <span class="track-label {% if order.status == 'Shipped' or order.status == 'Delivered' %}done{% endif %}">Shipped</span>
               </div>
 
-              <!-- Step 4: Delivered -->
+              <!-- Delivered -->
               <div class="track-step">
                 <div class="track-dot {% if order.status == 'Delivered' %}done{% endif %}">
                   {% if order.status == 'Delivered' %}
@@ -420,20 +246,19 @@ body { background: var(--bg); }
                 </div>
                 <span class="track-label {% if order.status == 'Delivered' %}done{% endif %}">Delivered</span>
               </div>
-
             </div>
 
             {% if order.tracking_id %}
-            <div style="margin-top:18px;padding:12px 14px;background:var(--surface);border:1px solid var(--border);border-radius:9px;display:flex;align-items:center;justify-content:space-between">
+            <div class="tracking-id-row">
               <div>
-                <div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:3px">Tracking ID</div>
-                <div style="font-family:monospace;font-size:14px;font-weight:700;letter-spacing:1px">{{ order.tracking_id }}</div>
+                <div class="tracking-id-label">Tracking ID</div>
+                <div class="tracking-id-val">{{ order.tracking_id }}</div>
               </div>
-              <button onclick="copyTracking('{{ order.tracking_id }}')" style="padding:7px 14px;border:1px solid var(--border);border-radius:8px;background:#fff;font-size:12px;font-weight:600;font-family:var(--font-body);cursor:pointer;transition:all .15s" onmouseover="this.style.background='var(--surface-2)'" onmouseout="this.style.background='#fff'">Copy</button>
+              <button class="btn-copy" onclick="copyTracking('{{ order.tracking_id }}', this)">Copy</button>
             </div>
             {% endif %}
-
           {% endif %}
+
         </div>
       </div>
 
@@ -441,16 +266,22 @@ body { background: var(--bg); }
       <div class="od-card">
         <div class="od-card-head">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-          <span class="od-card-title">Items Ordered ({{ items|length }})</span>
+          <!-- ✅ FIX: use order.items.all to count, not the template variable -->
+          <span class="od-card-title">Items Ordered ({{ order.items.count }})</span>
         </div>
         <div class="od-card-body">
-          {% for item in items %}
+
+          <!-- ✅ FIX: iterate order.items.all directly — no need to pass `items`
+               from the view separately. If your view passes `items`, both work.
+               Using order.items.all makes it self-contained. -->
+          {% for item in order.items.all %}
           <div class="od-item">
             {% if item.product.image %}
               <img src="{{ item.product.image.url }}" class="od-item-img" alt="{{ item.product.name }}">
             {% else %}
               <div class="od-item-img-ph"></div>
             {% endif %}
+
             <div style="min-width:0;flex:1">
               <div class="od-item-name">{{ item.product.name }}</div>
               <div class="od-item-tags">
@@ -461,30 +292,59 @@ body { background: var(--bg); }
               </div>
               <div class="od-item-qty">Qty {{ item.quantity }}</div>
             </div>
+
             <div class="od-item-price">₹{{ item.price }}</div>
           </div>
+          {% empty %}
+          <div class="empty-items">
+            <div class="empty-items-icon">📦</div>
+            <div class="empty-items-text">No items found for this order.</div>
+          </div>
           {% endfor %}
+
         </div>
       </div>
 
     </div>
 
-    <!-- RIGHT -->
+    <!-- ── RIGHT ── -->
     <div>
 
       <!-- SUMMARY -->
       <div class="od-summary-card">
-        <div class="od-sum-head"><div class="od-sum-title">Order Summary</div></div>
+        <div class="od-sum-head">
+          <div class="od-sum-title">Order Summary</div>
+        </div>
         <div class="od-sum-body">
           <div class="od-sum-row"><span>Subtotal</span><span>₹{{ order.total_amount }}</span></div>
           {% if order.discount %}
           <div class="od-sum-row discount"><span>Discount</span><span>− ₹{{ order.discount }}</span></div>
           {% endif %}
-          <div class="od-sum-row"><span>Delivery</span><span>{% if order.delivery_charge == 0 or not order.delivery_charge %}<span style="color:var(--green)">Free</span>{% else %}₹{{ order.delivery_charge }}{% endif %}</span></div>
+          <div class="od-sum-row">
+            <span>Delivery</span>
+            <span>{% if not order.delivery_charge or order.delivery_charge == 0 %}<span style="color:var(--green)">Free</span>{% else %}₹{{ order.delivery_charge }}{% endif %}</span>
+          </div>
           <hr class="od-sum-divider">
           <div class="od-sum-total">
             <span class="od-sum-total-label">Total</span>
             <span class="od-sum-total-val">₹{{ order.total_amount }}</span>
+          </div>
+
+          <!-- ✅ NEW: Payment Status row -->
+          <div class="od-pay-status-row">
+            <span class="od-pay-status-label">Payment Status</span>
+            <span class="od-pay-status-pill
+              {% if order.payment_status|lower == 'paid' %}pay-pill-paid
+              {% elif order.payment_status|lower == 'pending' %}pay-pill-pending
+              {% elif order.payment_status|lower == 'failed' %}pay-pill-failed
+              {% elif order.payment_status|lower == 'refunded' %}pay-pill-refunded
+              {% else %}pay-pill-default{% endif %}">
+              {% if order.payment_status|lower == 'paid' %}✓ Paid
+              {% elif order.payment_status|lower == 'pending' %}⏳ Pending
+              {% elif order.payment_status|lower == 'failed' %}✕ Failed
+              {% elif order.payment_status|lower == 'refunded' %}↩ Refunded
+              {% else %}{{ order.payment_status }}{% endif %}
+            </span>
           </div>
         </div>
       </div>
@@ -513,7 +373,7 @@ body { background: var(--bg); }
   </div>
 </div>
 
-<!-- ─── CANCEL MODAL ─── -->
+<!-- CANCEL MODAL -->
 <div id="cancelModal" class="modal-overlay">
   <div class="modal-box">
     <div class="modal-icon">⚠️</div>
@@ -532,19 +392,19 @@ function closeCancelModal() { document.getElementById("cancelModal").classList.r
 document.getElementById("cancelModal").addEventListener("click", function(e) { if (e.target === this) closeCancelModal(); });
 function submitCancel() { document.getElementById("cancelForm").submit(); }
 
-function copyTracking(id) {
+function copyTracking(id, btn) {
   navigator.clipboard.writeText(id);
-  event.target.innerText = "Copied ✓";
-  setTimeout(() => { event.target.innerText = "Copy"; }, 1800);
+  btn.innerText = "Copied ✓";
+  setTimeout(() => { btn.innerText = "Copy"; }, 1800);
 }
 
-// Animate the progress bar
+// Animate progress bar on load
 document.addEventListener("DOMContentLoaded", function () {
   const status = "{{ order.status }}";
   const bar = document.getElementById("trackProgress");
   if (!bar) return;
   const widths = { "Processing": "33%", "Shipped": "66%", "Delivered": "100%" };
-  setTimeout(() => { bar.style.width = widths[status] || "0%"; }, 100);
+  setTimeout(() => { bar.style.width = widths[status] || "0%"; }, 120);
 });
 </script>
 

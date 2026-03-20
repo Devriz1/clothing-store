@@ -331,6 +331,12 @@ footer {
 </footer>
 
 <script>
+  window.addEventListener("pageshow", function (event) {
+    // If page is loaded from back/forward cache
+    if (event.persisted || window.performance.getEntriesByType("navigation")[0].type === "back_forward") {
+        window.location.reload();
+    }
+});
 function toggleMobileNav(btn) {
   const nav = document.getElementById("mobileNav");
   nav.classList.toggle("open");

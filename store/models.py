@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.text import slugify
+from cloudinary.models import CloudinaryField
 
 
 class Category(models.Model):
@@ -21,7 +22,7 @@ class Product(models.Model):
     description = models.TextField()
 
     # Main product image
-    image = models.ImageField(upload_to='products/')
+    image = CloudinaryField('image')
 
     category = models.ForeignKey(
         Category,
@@ -79,7 +80,7 @@ class ProductImage(models.Model):
         related_name="images"
     )
 
-    image = models.ImageField(upload_to="products/")
+    image = CloudinaryField('image')
     alt_text = models.CharField(max_length=200, blank=True)
 
     def __str__(self):

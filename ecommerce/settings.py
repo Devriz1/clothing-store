@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 import os
+import cloudinary
 from pathlib import Path
 from django.contrib.messages import constants as messages
 
@@ -28,9 +29,20 @@ DEBUG = False
 
 ALLOWED_HOSTS = ["*"]
 
-
+CSRF_TRUSTED_ORIGINS = [
+    "https://*.ngrok-free.app",
+    "http://*.ngrok-free.app",
+]
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+cloudinary.config(
+    cloud_name = "dkl6ry5xo",
+    api_key = "393959599517767",
+    api_secret = "PIDwWQY37_-8zOuR5C9mGKmdrn8",
+)
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 # Application definition
-
+CSRF_COOKIE_SECURE = False
+SESSION_COOKIE_SECURE = False
 INSTALLED_APPS = [
     'jazzmin',
     'django.contrib.admin',
@@ -44,6 +56,8 @@ INSTALLED_APPS = [
     'cart',
     'orders',
     'dashboard',
+    'cloudinary',
+    'cloudinary_storage',
 ]
 
 MIDDLEWARE = [

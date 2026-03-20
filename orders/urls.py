@@ -12,4 +12,6 @@ urlpatterns = [
     path('apply-coupon/', apply_coupon, name='apply_coupon'),
     path("remove-coupon/", views.remove_coupon, name="remove_coupon"),
     path("order/<int:order_id>/", views.order_detail, name="order_detail"),
+    path("payment/<int:order_id>/", views.payment_page, name="payment_page"),
+    path("confirm-payment/<int:order_id>/", views.confirm_payment, name="confirm_payment"),
 ]

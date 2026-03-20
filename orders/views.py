@@ -10,6 +10,9 @@ from django.shortcuts import get_object_or_404
 from accounts.models import Address
 from .models import Coupon
 from django.utils import timezone
+import qrcode
+import base64
+from io import BytesIO
 
 
 @login_required
@@ -132,8 +135,13 @@ def checkout(request):
             if "coupon_id" in request.session:
                 del request.session["coupon_id"]
 
-        return redirect('orders:order_success')
+        if payment_method == "COD":
+            order.payment_status = "Pending"
+            order.save()
+            return redirect('orders:order_success')
 
+        else:
+            return redirect('orders:payment_page', order_id=order.id)
     # ================= FINAL TOTAL FOR TEMPLATE =================
 
     final_total = subtotal_after_discount
@@ -244,10 +252,44 @@ def order_detail(request, order_id):
         "out_for_delivery": 4,
         "delivered": 5
     }
-
+    items = OrderItem.objects.filter(order=order)
     current_step = status_map.get(order.status.lower(), 1)
 
     return render(request, "orders/order_detail.html", {
         "order": order,
         "current_step": current_step
     })
+
+@login_required
+def payment_page(request, order_id):
+
+    order = get_object_or_404(Order, id=order_id, user=request.user)
+
+    upi_id = "risalrichu01@oksbi"
+    store_name = "HOODLAB"
+
+    upi_link = f"upi://pay?pa={upi_id}&pn={store_name}&am={order.total_amount}&cu=INR&tn=Order{order.id}"
+
+    qr = qrcode.make(upi_link)
+    buffer = BytesIO()
+    qr.save(buffer, format="PNG")
+
+    qr_base64 = base64.b64encode(buffer.getvalue()).decode()
+
+    return render(request, "orders/payment.html", {
+        "order": order,
+        "upi_link": upi_link,
+        "qr_code": qr_base64
+    })
+@login_required
+def confirm_payment(request, order_id):
+
+    order = get_object_or_404(Order, id=order_id, user=request.user)
+
+    if order.payment_status == "Pending":
+        order.payment_status = "Submitted"
+        order.save()
+
+    messages.success(request, "Payment submitted for verification.")
+
+    return redirect("orders:order_success")
