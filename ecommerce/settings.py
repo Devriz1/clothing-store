@@ -34,11 +34,20 @@ CSRF_TRUSTED_ORIGINS = [
     "http://*.ngrok-free.app",
 ]
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+#cloudinary.config(
+ #   cloud_name = "dkl6ry5xo",
+ #   api_key = "393959599517767",
+ #   api_secret = "PIDwWQY37_-8zOuR5C9mGKmdrn8",
+#)
+
+SECRET_KEY = os.environ.get('SECRET_KEY')
+
 cloudinary.config(
-    cloud_name = "dkl6ry5xo",
-    api_key = "393959599517767",
-    api_secret = "PIDwWQY37_-8zOuR5C9mGKmdrn8",
+    cloud_name = os.environ.get('CLOUDINARY_CLOUD_NAME'),
+    api_key = os.environ.get('CLOUDINARY_API_KEY'),
+    api_secret = os.environ.get('CLOUDINARY_API_SECRET'),
 )
+
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 # Application definition
 CSRF_COOKIE_SECURE = False
