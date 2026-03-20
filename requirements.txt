@@ -1,4 +1,4 @@
-arabic-reshaper==3.0.0
+
 asgiref==3.9.1
 asn1crypto==1.5.1
 certifi==2025.8.3
@@ -35,7 +35,6 @@ pyHanko==0.30.0
 pyhanko-certvalidator==0.28.0
 PyJWT==2.10.1
 pypdf==6.0.0
-python-bidi==0.6.6
 PyYAML==6.0.2
 qrcode==8.2
 redis==6.2.0
