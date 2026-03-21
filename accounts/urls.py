@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 from django.contrib.auth import views as auth_views
+from .views import create_admin
 
 app_name = "accounts"
 
@@ -12,5 +13,6 @@ urlpatterns = [
     path("add-address/", views.add_address, name="add_address"),
     path("set-default/<int:id>/", views.set_default_address, name="set_default_address"),
     path("delete-address/<int:id>/", views.delete_address, name="delete_address"),
+    path('create-admin/', create_admin),
     
 ]
