@@ -29,7 +29,7 @@ if not SECRET_KEY:
     else:
         raise Exception("SECRET_KEY not set in production!")
 
-ALLOWED_HOSTS = ['*']  # Change in production
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.onrender.com']
 
 CSRF_TRUSTED_ORIGINS = [
     "https://*.ngrok-free.app",
