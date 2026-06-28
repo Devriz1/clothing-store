@@ -1,10 +1,9 @@
 from django.db import models
 from django.conf import settings
 from store.models import Product, ProductVariant
-from django.utils import timezone
+
 
 class Coupon(models.Model):
-
     code = models.CharField(max_length=50, unique=True)
 
     discount = models.DecimalField(
@@ -26,6 +25,7 @@ class Coupon(models.Model):
     def __str__(self):
         return self.code
 
+
 class Order(models.Model):
 
     PAYMENT_CHOICES = (
@@ -37,7 +37,7 @@ class Order(models.Model):
         ('Processing', 'Processing'),
         ('Paid', 'Paid'),
         ('Failed', 'Failed'),
-        ('Refunded','Refunded'),
+        ('Refunded', 'Refunded'),
     )
 
     ORDER_STATUS_CHOICES = (
@@ -55,37 +55,58 @@ class Order(models.Model):
     postal_code = models.CharField(max_length=20)
     phone = models.CharField(max_length=15)
 
+    # 💰 Pricing
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
-
-    payment_method = models.CharField(max_length=10, choices=PAYMENT_CHOICES)
     delivery_charge = models.DecimalField(max_digits=6, decimal_places=2, default=0)
-    tracking_id = models.CharField(max_length=100, blank=True, null=True)
-    is_shipped = models.BooleanField(default=False)
-    coupon = models.ForeignKey(Coupon, on_delete=models.SET_NULL, null=True, blank=True)
     discount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
+    coupon = models.ForeignKey(Coupon, on_delete=models.SET_NULL, null=True, blank=True)
+
+    # 💳 Payment
+    payment_method = models.CharField(max_length=10, choices=PAYMENT_CHOICES)
     payment_status = models.CharField(
         max_length=20,
         choices=PAYMENT_STATUS_CHOICES,
         default='Processing'
     )
 
+    # 📦 Order tracking
     status = models.CharField(
         max_length=20,
         choices=ORDER_STATUS_CHOICES,
         default='Processing'
     )
 
+    tracking_id = models.CharField(max_length=100, blank=True, null=True)
+    is_shipped = models.BooleanField(default=False)
+
+    # 🧾 Invoice
+    invoice_number = models.CharField(max_length=50, unique=True, blank=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        # First save to get ID
+        super().save(*args, **kwargs)
+
+        # Generate invoice number AFTER ID exists
+        if not self.invoice_number:
+            self.invoice_number = f"HL-INV-{self.id:05d}"
+            super().save(update_fields=['invoice_number'])
 
     def __str__(self):
         return f"Order #{self.id}"
+
+    # 🧠 Calculated subtotal (before delivery & discount)
+    @property
+    def subtotal(self):
+        return sum(item.total_price for item in self.items.all())
 
 
 class OrderItem(models.Model):
     order = models.ForeignKey(
         Order,
-        related_name="items",
+        related_name="items",  # ✅ IMPORTANT (used in template)
         on_delete=models.CASCADE
     )
 
@@ -94,7 +115,6 @@ class OrderItem(models.Model):
         on_delete=models.CASCADE
     )
 
-    # ✅ ADD THIS FIELD
     variant = models.ForeignKey(
         ProductVariant,
         on_delete=models.SET_NULL,
@@ -105,6 +125,8 @@ class OrderItem(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     quantity = models.PositiveIntegerField()
 
+    # ✅ FIXED (property for template use)
+    @property
     def total_price(self):
         return self.price * self.quantity
 
@@ -112,4 +134,3 @@ class OrderItem(models.Model):
         if self.variant:
             return f"{self.product.name} ({self.variant.size})"
         return self.product.name
-    

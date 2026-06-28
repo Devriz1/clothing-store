@@ -94,6 +94,17 @@ body { background: var(--bg); }
 .empty-items-icon { font-size: 36px; opacity: .2; margin-bottom: 10px; }
 .empty-items-text { font-size: 13.5px; color: var(--muted); }
 
+/* INVOICE BUTTON */
+.btn-invoice {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 10px 18px; border: 1px solid var(--border); border-radius: 9px;
+  background: #fff; color: var(--ink-soft); font-size: 13px; font-weight: 600;
+  font-family: var(--font-body); text-decoration: none; cursor: pointer;
+  transition: all .18s; margin-top: 4px;
+}
+.btn-invoice:hover { background: var(--surface-2); color: var(--ink); }
+.btn-invoice svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
+
 /* SUMMARY */
 .od-summary-card { background: #fff; border: 1px solid var(--border); border-radius: 16px; overflow: hidden; position: sticky; top: 84px; }
 .od-sum-head { padding: 17px 22px; border-bottom: 1px solid var(--border); }
@@ -266,14 +277,10 @@ body { background: var(--bg); }
       <div class="od-card">
         <div class="od-card-head">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-          <!-- ✅ FIX: use order.items.all to count, not the template variable -->
           <span class="od-card-title">Items Ordered ({{ order.items.count }})</span>
         </div>
         <div class="od-card-body">
 
-          <!-- ✅ FIX: iterate order.items.all directly — no need to pass `items`
-               from the view separately. If your view passes `items`, both work.
-               Using order.items.all makes it self-contained. -->
           {% for item in order.items.all %}
           <div class="od-item">
             {% if item.product.image %}
@@ -305,6 +312,12 @@ body { background: var(--bg); }
         </div>
       </div>
 
+      <!-- FIX 1: Invoice button moved inside the left column, as a proper <a> link (no nested <button>) -->
+      <a href="{% url 'orders:invoice' order.id %}" target="_blank" class="btn-invoice">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        View Invoice
+      </a>
+
     </div>
 
     <!-- ── RIGHT ── -->
@@ -316,7 +329,8 @@ body { background: var(--bg); }
           <div class="od-sum-title">Order Summary</div>
         </div>
         <div class="od-sum-body">
-          <div class="od-sum-row"><span>Subtotal</span><span>₹{{ order.total_amount }}</span></div>
+          <!-- FIX 2: Subtotal uses order.subtotal (pre-discount); Total uses order.total_amount (final) -->
+          <div class="od-sum-row"><span>Subtotal</span><span>₹{{ order.subtotal }}</span></div>
           {% if order.discount %}
           <div class="od-sum-row discount"><span>Discount</span><span>− ₹{{ order.discount }}</span></div>
           {% endif %}
@@ -330,7 +344,7 @@ body { background: var(--bg); }
             <span class="od-sum-total-val">₹{{ order.total_amount }}</span>
           </div>
 
-          <!-- ✅ NEW: Payment Status row -->
+          <!-- Payment Status row -->
           <div class="od-pay-status-row">
             <span class="od-pay-status-label">Payment Status</span>
             <span class="od-pay-status-pill
@@ -354,9 +368,11 @@ body { background: var(--bg); }
         <div class="od-info-row">
           <div class="od-info-label">Shipping Address</div>
           <div class="od-info-name">{{ order.full_name }}</div>
+          <!-- FIX 3: Added state field between city/postal and phone -->
           <div class="od-info-text">
             {{ order.address }}<br>
-            {{ order.city }} — {{ order.postal_code }}<br>
+            {{ order.city }}{% if order.state %}, {{ order.state }}{% endif %} — {{ order.postal_code }}<br>
+            {% if order.country %}{{ order.country }}<br>{% endif %}
             {{ order.phone }}
           </div>
         </div>
@@ -389,7 +405,12 @@ body { background: var(--bg); }
 <script>
 function openCancelModal()  { document.getElementById("cancelModal").classList.add("open"); }
 function closeCancelModal() { document.getElementById("cancelModal").classList.remove("open"); }
-document.getElementById("cancelModal").addEventListener("click", function(e) { if (e.target === this) closeCancelModal(); });
+
+// FIX 4: Use a named function reference instead of inline arrow so `this` reliably refers to the overlay element
+document.getElementById("cancelModal").addEventListener("click", function(e) {
+  if (e.target === this) closeCancelModal();
+});
+
 function submitCancel() { document.getElementById("cancelForm").submit(); }
 
 function copyTracking(id, btn) {

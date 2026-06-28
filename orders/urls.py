@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 from .views import apply_coupon
+from .views import invoice_view
 
 app_name = "orders"
 
@@ -14,4 +15,5 @@ urlpatterns = [
     path("order/<int:order_id>/", views.order_detail, name="order_detail"),
     path("payment/<int:order_id>/", views.payment_page, name="payment_page"),
     path("confirm-payment/<int:order_id>/", views.confirm_payment, name="confirm_payment"),
+    path('invoice/<int:order_id>/', invoice_view, name='invoice'),
 ]

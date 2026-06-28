@@ -11,8 +11,6 @@ from orders.models import Order
 from .models import Address, PaymentMethod
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
-from django.contrib.auth import get_user_model
-from django.http import HttpResponse
 
 
 def register_view(request):
@@ -149,16 +147,3 @@ def delete_address(request, id):
 
 
 
-
-def create_admin(request):
-    User = get_user_model()
-
-    if not User.objects.filter(username="admin").exists():
-        User.objects.create_superuser(
-            username="admin",
-            email="admin@example.com",
-            password="admin123"
-        )
-        return HttpResponse("Admin created!")
-
-    return HttpResponse("Admin already exists")

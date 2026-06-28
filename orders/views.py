@@ -293,3 +293,7 @@ def confirm_payment(request, order_id):
     messages.success(request, "Payment submitted for verification.")
 
     return redirect("orders:order_success")
+
+def invoice_view(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+    return render(request, 'orders/invoice.html', {'order': order})
